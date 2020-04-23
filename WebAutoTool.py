@@ -744,9 +744,6 @@ class MainInit(QMainWindow):
                 self.result_error_num = 0
                 self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
                 self.start_time = time.time()
-                photo_dir = os.path.join(os.path.dirname(__file__), "test_screenshot_png")
-                if not os.path.exists(photo_dir):
-                    os.mkdir(photo_dir)
                 for object_path, dirs, files in os.walk(os.path.join(os.path.dirname(__file__),"error_and_fail_test_case")):
                     object_path = object_path
                     self.basename = os.path.basename(object_path)
@@ -872,9 +869,6 @@ class MainInit(QMainWindow):
         self.result_error_num = 0
         self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
         self.start_time = time.time()
-        photo_dir = os.path.join(os.path.dirname(__file__), "test_screenshot_png")
-        if not os.path.exists(photo_dir):
-            os.mkdir(photo_dir)
         for object_path, dirs, files in os.walk(excute_path):
             object_path = object_path
             self.basename = os.path.basename(object_path)
@@ -1103,9 +1097,6 @@ class MainInit(QMainWindow):
         self.result_error_num = 0
         self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
         self.start_time = time.time()
-        photo_dir =os.path.join(os.path.dirname(__file__),"test_screenshot_png")
-        if not os.path.exists(photo_dir):
-            os.mkdir(photo_dir)
         base_dir = os.path.join(os.path.dirname(__file__),"test_case_object")
         if os.path.exists(base_dir):
             path = QFileDialog.getExistingDirectory(self, "请选择执行目录", base_dir)
@@ -2569,6 +2560,9 @@ class MainInit(QMainWindow):
     def create_error_and_fail_dir(self):
         if not os.path.exists(os.path.join(os.path.dirname(__file__),"error_and_fail_test_case")):
             os.makedirs(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
+        photo_dir = os.path.join(os.path.dirname(__file__), "test_screenshot_png")
+        if not os.path.exists(photo_dir):
+            os.mkdir(photo_dir)
 
 
 if __name__ == '__main__':
