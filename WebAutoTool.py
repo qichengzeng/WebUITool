@@ -1308,10 +1308,7 @@ class MainInit(QMainWindow):
             QMessageBox.information(self, "提示", "SECTION不存在", QMessageBox.Ok)
 
     def login_information_method(self):
-        file_path = os.path.join(os.path.dirname(__file__), "LOGIN.ini")
-        if not os.path.exists(file_path):
-            with open(file_path, "w+") as f:
-                pass
+        file_path_login = os.path.join(os.path.dirname(__file__), "LOGIN.ini")
         dialog = QDialog()
         dialog.setWindowTitle("登录账号配置")
         username_edit = QLineEdit(dialog)
@@ -1324,7 +1321,7 @@ class MainInit(QMainWindow):
 
         def submit_btn_method():
             if username_edit.text() and password_edit.text():
-                with open(file_path, "w+") as f:
+                with open(file_path_login, "w+") as f:
                     f.write(
                         username_edit.text()+";"+password_edit.text())
                 dialog.close()
@@ -1342,7 +1339,7 @@ class MainInit(QMainWindow):
         password_edit.setEchoMode(QLineEdit.Password)
         password_edit.move(0, 30)
         dialog.resize(300, 90)
-        with open(file_path, "r") as f:
+        with open(file_path_login, "r") as f:
             read_string = f.read()
             read_list = read_string.split(";")
             if len(read_list) == 2:
@@ -1350,10 +1347,7 @@ class MainInit(QMainWindow):
                 password_edit.setText(read_list[1])
         dialog.exec_()
     def mysql_data_method(self):
-        file_path = os.path.join(os.path.dirname(__file__), "MYSQL.ini")
-        if not os.path.exists(file_path):
-            with open(file_path, "w+") as f:
-                pass
+        file_path_email = os.path.join(os.path.dirname(__file__), "MYSQL.ini")
         dialog = QDialog()
         dialog.setWindowTitle("数据库配置")
         ip_line_edit = QLineEdit(dialog)
@@ -1369,7 +1363,7 @@ class MainInit(QMainWindow):
 
         def submit_btn_method():
             if ip_line_edit.text() and user_name_edit.text() and password_edit.text() and port_edit.text() and database_edit.text():
-                with open(file_path, "w+") as f:
+                with open(file_path_email, "w+") as f:
                     f.write(ip_line_edit.text()+";"+user_name_edit.text()+";"+password_edit.text()+";"+port_edit.text()+";"+database_edit.text())
                 dialog.close()
 
@@ -1395,7 +1389,7 @@ class MainInit(QMainWindow):
         port_edit.move(0,60)
         database_edit.move(150,60)
         dialog.resize(300, 120)
-        with open(file_path, "r") as f:
+        with open(file_path_email, "r") as f:
             read_string = f.read()
             read_list = read_string.split(";")
             if len(read_list) == 5:
@@ -1437,12 +1431,8 @@ class MainInit(QMainWindow):
 
 
     def open_test_case_action_method(self):
-        if os.path.exists(os.path.join(os.path.dirname(__file__),"test_case_object")):
-            path = QFileDialog.getOpenFileName(self,"打开测试用例",os.path.join(os.path.dirname(__file__),"test_case_object"),"*.web")
-        else:
-            os.mkdir(os.path.join(os.path.dirname(__file__),"test_case_object"))
-            path = QFileDialog.getOpenFileName(self, "打开测试用例",os.path.join(os.path.dirname(__file__), "test_case_object"), "*.web")
 
+        path = QFileDialog.getOpenFileName(self, "打开测试用例",os.path.join(os.path.dirname(__file__), "test_case_object"), "*.web")
         if path[0]:
             try:
                 test_case = pickle.load(open(path[0],"rb"))
@@ -1631,11 +1621,7 @@ class MainInit(QMainWindow):
         if not self.exp_line_edit.text():
             QMessageBox.information(self, "提示", "请输入预期结果", QMessageBox.Ok)
             return None
-        if os.path.exists(os.path.join(os.path.dirname(__file__),"test_case_object")):
-               path = QFileDialog.getSaveFileName(self,"保存测试用例",os.path.join(os.path.dirname(__file__),"test_case_object",self.title_line_edit.text()),"*.web")
-        else:
-            os.mkdir(os.path.join(os.path.dirname(__file__),"test_case_object"))
-            path = QFileDialog.getSaveFileName(self, "保存测试用例",os.path.join(os.path.dirname(__file__), "test_case_object",self.title_line_edit.text()), "*.web")
+        path = QFileDialog.getSaveFileName(self, "保存测试用例",os.path.join(os.path.dirname(__file__), "test_case_object",self.title_line_edit.text()), "*.web")
         if path[0]:
             for i in range(0,len(self.data_value_list)):
                 self.data_name_text_list.append(self.data_name_list[i].text())
@@ -1992,9 +1978,6 @@ class MainInit(QMainWindow):
         if not self.exp_line_edit.text():
             QMessageBox.information(self,"提示","请输入预期结果",QMessageBox.Ok)
             return None
-        if not os.path.exists(os.path.join(os.path.dirname(__file__),"SERVICEIP.ini")):
-            QMessageBox.information(self, "提示", "请配置测试服务器地址", QMessageBox.Ok)
-            return None
         self.driver_test_para = BasePage(driver="driver", title="test.log").back_method_dict()
         for i in range(0, len(self.step_combox_list)):
             if self.data_transfer_list[i].text():#判断数据传递中格式以及返回给第几个参数的检查
@@ -2184,29 +2167,16 @@ class MainInit(QMainWindow):
             with open(os.path.join(os.path.dirname(__file__), "test_case_log", self.title_line_edit.text() + ".log"),
                       "r", encoding="utf-8") as f:
                 log_text = f.read()
-            if os.path.exists(os.path.join(os.path.dirname(__file__), "test_case_report")):
-                with open(
-                        os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                        "a+") as f:
-                    if self.result_label.text() == self.result_success:
-                        f.write(TestHtmlReport.HTMLROWPASS.format(self.basename, self.title_line_edit.text(), log_text,
-                                                                  end_time - start_time, self.result_label.text()))
-                    if self.result_label.text() == self.result_fail:
-                        f.write(
-                            TestHtmlReport.HTMLROWUNPASS.format(self.basename, self.title_line_edit.text(), log_text,
-                                                                end_time - start_time, self.result_label.text()))
-            else:
-                os.mkdir(os.path.join(os.path.dirname(__file__), "test_case_report"))
-                with open(
-                        os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                        "a+") as f:
-                    if self.result_label.text() == self.result_success:
-                        f.write(TestHtmlReport.HTMLROWPASS.format(self.basename, self.title_line_edit.text(), log_text,
-                                                                  end_time - start_time, self.result_label.text()))
-                    if self.result_label.text() == self.result_fail:
-                        f.write(
-                            TestHtmlReport.HTMLROWUNPASS.format(self.basename, self.title_line_edit.text(), log_text,
-                                                                end_time - start_time, self.result_label.text()))
+            with open(
+                    os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
+                    "a+") as f:
+                if self.result_label.text() == self.result_success:
+                    f.write(TestHtmlReport.HTMLROWPASS.format(self.basename, self.title_line_edit.text(), log_text,
+                                                              end_time - start_time, self.result_label.text()))
+                if self.result_label.text() == self.result_fail:
+                    f.write(
+                        TestHtmlReport.HTMLROWUNPASS.format(self.basename, self.title_line_edit.text(), log_text,
+                                                            end_time - start_time, self.result_label.text()))
 
         except:
             # shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
@@ -2222,19 +2192,12 @@ class MainInit(QMainWindow):
             with open(os.path.join(os.path.dirname(__file__), "test_case_log", self.title_line_edit.text() + ".log"),
                       "r", encoding="utf-8") as f:
                 log_text = f.read()
-            if os.path.exists(os.path.join(os.path.dirname(__file__), "test_case_report")):
-                with open(
-                        os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                        "a+") as f:
-                    f.write(TestHtmlReport.HTMLROWERROR.format(self.basename, self.title_line_edit.text(), log_text,
-                                                               end_time - start_time, self.result_label.text()))
-            else:
-                os.mkdir(os.path.join(os.path.dirname(__file__), "test_case_report"))
-                with open(
-                        os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                        "a+") as f:
-                    f.write(TestHtmlReport.HTMLROWERROR.format(self.basename, self.title_line_edit.text(), log_text,
-                                                               end_time - start_time, self.result_label.text()))
+            with open(
+                    os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
+                    "a+") as f:
+                f.write(TestHtmlReport.HTMLROWERROR.format(self.basename, self.title_line_edit.text(), log_text,
+                                                           end_time - start_time, self.result_label.text()))
+
     def single_excute_action_method_two(self):#用例失败copy一份出来
         try:
             if self.chrome_radio.isChecked():
@@ -2281,23 +2244,12 @@ class MainInit(QMainWindow):
                 self.driver_true.quit()
             with open(os.path.join(os.path.dirname(__file__), "test_case_log",self.title_line_edit.text()+".log"), "r", encoding="utf-8") as f:
                 log_text = f.read()
-            if os.path.exists(os.path.join(os.path.dirname(__file__),"test_case_report")):
-                  with open(os.path.join(os.path.dirname(__file__),"test_case_report",self.excute_time+"_report.html"),"a+") as f:
-                        if self.result_label.text()== self.result_success:
-                           f.write(TestHtmlReport.HTMLROWPASS.format(self.basename,self.title_line_edit.text(),log_text,end_time-start_time,self.result_label.text()))
-                        if self.result_label.text() == self.result_fail:
-                           f.write(TestHtmlReport.HTMLROWUNPASS.format(self.basename,self.title_line_edit.text(), log_text,
-                                                                  end_time - start_time, self.result_label.text()))
-            else:
-                  os.mkdir(os.path.join(os.path.dirname(__file__),"test_case_report"))
-                  with open(os.path.join(os.path.dirname(__file__), "test_case_report",self.excute_time + "_report.html"), "a+") as f:
-                          if self.result_label.text() == self.result_success:
-                              f.write(TestHtmlReport.HTMLROWPASS.format(self.basename,self.title_line_edit.text(), log_text,
-                                                                        end_time - start_time, self.result_label.text()))
-                          if self.result_label.text() == self.result_fail:
-                              f.write(TestHtmlReport.HTMLROWUNPASS.format(self.basename,self.title_line_edit.text(), log_text,
-                                                                          end_time - start_time, self.result_label.text()))
-
+            with open(os.path.join(os.path.dirname(__file__),"test_case_report",self.excute_time+"_report.html"),"a+") as f:
+                if self.result_label.text()== self.result_success:
+                   f.write(TestHtmlReport.HTMLROWPASS.format(self.basename,self.title_line_edit.text(),log_text,end_time-start_time,self.result_label.text()))
+                if self.result_label.text() == self.result_fail:
+                   f.write(TestHtmlReport.HTMLROWUNPASS.format(self.basename,self.title_line_edit.text(), log_text,
+                                                          end_time - start_time, self.result_label.text()))
         except:
             shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
             end_time = time.time()
@@ -2311,13 +2263,9 @@ class MainInit(QMainWindow):
             self.result_error_num += 1
             with open(os.path.join(os.path.dirname(__file__), "test_case_log", self.title_line_edit.text() + ".log"),"r", encoding="utf-8") as f:
                 log_text = f.read()
-            if os.path.exists(os.path.join(os.path.dirname(__file__), "test_case_report")):
-                with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+") as f:
-                    f.write(TestHtmlReport.HTMLROWERROR.format(self.basename,self.title_line_edit.text(),log_text,end_time - start_time,self.result_label.text()))
-            else:
-                os.mkdir(os.path.join(os.path.dirname(__file__), "test_case_report"))
-                with open(os.path.join(os.path.dirname(__file__), "test_case_report",self.excute_time + "_report.html"),"a+") as f:
-                    f.write(TestHtmlReport.HTMLROWERROR.format(self.basename,self.title_line_edit.text(), log_text,end_time - start_time,self.result_label.text()))
+            with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+") as f:
+                f.write(TestHtmlReport.HTMLROWERROR.format(self.basename,self.title_line_edit.text(),log_text,end_time - start_time,self.result_label.text()))
+
 
     def sub_step_btn_method(self):
         if self.steps_table_row >= 2:
@@ -2338,20 +2286,6 @@ class MainInit(QMainWindow):
            self.steps_table.setRowCount(self.steps_table_row)
            self.data_table.setRowCount(self.table_row)
     def email_action_method(self):
-        file_path = os.path.join(os.path.dirname(__file__), "EMAIL.ini")
-        if not os.path.exists(file_path):
-            with open(file_path, "w+") as f:
-                conf = ConfigParser()
-                conf.read(filenames="EMAIL.ini")
-                conf.add_section("send")
-                conf.set("send", "email_service", "")
-                conf.set("send","user_name", "")
-                conf.set("send", "password", "")
-                conf.add_section("receve")
-                conf.set("receve", "receve_user_one", "")
-                conf.set("receve", "receve_user_two", "")
-                conf.set("receve", "receve_user_three", "")
-                conf.write(f)
         conf = ConfigParser()
         conf.read(filenames="EMAIL.ini")
         dialog = QDialog()
@@ -2406,6 +2340,7 @@ class MainInit(QMainWindow):
             dialog.close()
 
         def submit_btn_method():
+            file_path = os.path.join(os.path.dirname(__file__), "EMAIL.ini")
             with open(file_path, "w+") as f:
                 conf = ConfigParser()
                 conf.read(filenames="EMAIL.ini")
@@ -2433,9 +2368,6 @@ class MainInit(QMainWindow):
 
     def test_service_url_method(self):
         file_path = os.path.join(os.path.dirname(__file__),"SERVICEIP.ini")
-        if not os.path.exists(file_path):
-               with open(file_path,"w+") as f :
-                    pass
         dialog = QDialog()
         dialog.setWindowTitle("服务器IP及端口配置")
         self.ip_line_edit = QLineEdit(dialog)
@@ -2535,11 +2467,7 @@ class MainInit(QMainWindow):
         dialog.exec_()
 
     def view_log_action_method(self):
-        if os.path.exists(os.path.join(os.path.dirname(__file__),"test_case_log")):
-            path = QFileDialog.getOpenFileName(self,"日志查看",os.path.join(os.path.dirname(__file__),"test_case_log",self.title_line_edit.text()+".log"),"*.log")
-        else :
-            os.mkdir(os.path.join(os.path.dirname(__file__), "test_case_log"))
-            path = QFileDialog.getOpenFileName(self, "日志查看",os.path.join(os.path.dirname(__file__), "test_case_log",self.title_line_edit.text() + ".log"), "*.log")
+        path = QFileDialog.getOpenFileName(self,"日志查看",os.path.join(os.path.dirname(__file__),"test_case_log",self.title_line_edit.text()+".log"),"*.log")
         if path[0]:
             dialog = QDialog()
             dialog.setWindowTitle(os.path.basename(path[0])+"的执行日志")
@@ -2557,17 +2485,47 @@ class MainInit(QMainWindow):
             QMessageBox.information(self,"提示","请先执行测试用例",QMessageBox.Ok)
 
 
-    def create_error_and_fail_dir(self):
+    def create_all_dir(self):
         if not os.path.exists(os.path.join(os.path.dirname(__file__),"error_and_fail_test_case")):
             os.makedirs(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
         photo_dir = os.path.join(os.path.dirname(__file__), "test_screenshot_png")
         if not os.path.exists(photo_dir):
             os.mkdir(photo_dir)
-
-
+        if not os.path.exists(os.path.join(os.path.dirname(__file__), "test_case_log")):
+            os.mkdir(os.path.join(os.path.dirname(__file__), "test_case_log"))
+        if not os.path.exists(os.path.join(os.path.dirname(__file__), "test_case_object")):
+            os.mkdir(os.path.join(os.path.dirname(__file__), "test_case_object"))
+        if not os.path.exists(os.path.join(os.path.dirname(__file__), "test_case_report")):
+            os.mkdir(os.path.join(os.path.dirname(__file__), "test_case_report"))
+        file_path_email = os.path.join(os.path.dirname(__file__), "EMAIL.ini")
+        if not os.path.exists(file_path_email):
+            with open(file_path_email, "w+") as f:
+                conf = ConfigParser()
+                conf.read(filenames="EMAIL.ini")
+                conf.add_section("send")
+                conf.set("send", "email_service", "")
+                conf.set("send", "user_name", "")
+                conf.set("send", "password", "")
+                conf.add_section("receve")
+                conf.set("receve", "receve_user_one", "")
+                conf.set("receve", "receve_user_two", "")
+                conf.set("receve", "receve_user_three", "")
+                conf.write(f)
+        file_path_login = os.path.join(os.path.dirname(__file__), "LOGIN.ini")
+        if not os.path.exists(file_path_login):
+            with open(file_path_login, "w+") as f:
+                pass
+        file_path_email = os.path.join(os.path.dirname(__file__), "MYSQL.ini")
+        if not os.path.exists(file_path_email):
+            with open(file_path_email, "w+") as f:
+                pass
+        file_path = os.path.join(os.path.dirname(__file__), "SERVICEIP.ini")
+        if not os.path.exists(file_path):
+            with open(file_path, "w+") as f:
+                pass
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     initmain = MainInit()
-    initmain.create_error_and_fail_dir()
+    initmain.create_all_dir()
     sys.exit(app.exec_())
 
