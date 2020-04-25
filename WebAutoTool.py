@@ -415,11 +415,7 @@ class MainInit(QMainWindow):
         self.sender().setToolTip(self.sender().text())
     def import_method(self):
         base_dir = os.path.join(os.path.dirname(__file__), "test_case_object")
-        if os.path.exists(base_dir):
-            path = QFileDialog.getExistingDirectory(self, "请选择执行目录", base_dir)
-        else:
-            os.mkdir(base_dir)
-            path = QFileDialog.getExistingDirectory(self, "请选择执行目录", base_dir)
+        path = QFileDialog.getExistingDirectory(self, "请选择执行目录", base_dir)
         if path:
             if os.path.exists(os.path.join(path,os.path.basename(path)+"模块测试用例集.xlsx")):
                 try:
@@ -459,13 +455,7 @@ class MainInit(QMainWindow):
             QMessageBox.information(self, "提示", "批量导出EXCEL文件成功", QMessageBox.Yes)
 
     def unimport_method(self):
-        base_dir = os.path.join(os.path.dirname(__file__), "test_case_object")
-        if os.path.exists(base_dir):
-            path = QFileDialog.getOpenFileName(self, "打开测试用例表格",
-                                               os.path.join(os.path.dirname(__file__), "test_case_object"), "*.xlsx")
-        else:
-            os.mkdir(base_dir)
-            path = QFileDialog.getOpenFileName(self, "打开测试用例表格",
+        path = QFileDialog.getOpenFileName(self, "打开测试用例表格",
                                                os.path.join(os.path.dirname(__file__), "test_case_object"), "*.xlsx")
         if path[0]:
             wb = load_workbook(path[0])
@@ -535,36 +525,41 @@ class MainInit(QMainWindow):
         if reply == QMessageBox.Yes:
             global  timing_dir
             base_dir = os.path.join(os.path.dirname(__file__),"test_case_object")
-            self.select_m = int(self.hour_combox.currentText())
-            self.select_h = int(self.day_combox.currentText()[0:-1])
-            self.day_combox.setDisabled(True)
-            self.day_radio.setDisabled(True)
-            self.week_radio.setDisabled(True)
-            self.hour_combox.setDisabled(True)
-            self.week_combox.setVisible(False)
             path = QFileDialog.getExistingDirectory(self, "请选择执行目录", base_dir)
             if path:
+                self.select_m = int(self.hour_combox.currentText())
+                self.select_h = int(self.day_combox.currentText()[0:-1])
+                self.day_combox.setDisabled(True)
+                self.day_radio.setDisabled(True)
+                self.week_radio.setDisabled(True)
+                self.hour_combox.setDisabled(True)
+                self.week_combox.setVisible(False)
                 timing_dir = path
                 QMessageBox.information(self,"提示","生效成功",QMessageBox.Yes)
+            else:
+                QMessageBox.information(self, "提示", "没有选择执行目录,生效失败", QMessageBox.Yes)
+
 
     def week_radio_method(self):
         reply = QMessageBox.question(self, "提示", "你确定要生效这个定时任务吗？", QMessageBox.Yes | QMessageBox.No)
         if reply == QMessageBox.Yes:
             global timing_dir
             base_dir = os.path.join(os.path.dirname(__file__), "test_case_object")
-            self.select_m = int(self.hour_combox.currentText())
-            self.select_h = int(self.day_combox.currentText()[0:-1])
-            self.select_d = int(self.week_combox.currentText()[1:])
-            self.day_radio.setDisabled(True)
-            self.week_radio.setDisabled(True)
-            self.hour_combox.setDisabled(True)
-            self.day_combox.setDisabled(True)
-            self.week_combox.setDisabled(True)
-            self.week_combox.setVisible(True)
             path = QFileDialog.getExistingDirectory(self, "请选择执行目录", base_dir)
             if path:
+                self.select_m = int(self.hour_combox.currentText())
+                self.select_h = int(self.day_combox.currentText()[0:-1])
+                self.select_d = int(self.week_combox.currentText()[1:])
+                self.day_radio.setDisabled(True)
+                self.week_radio.setDisabled(True)
+                self.hour_combox.setDisabled(True)
+                self.day_combox.setDisabled(True)
+                self.week_combox.setDisabled(True)
+                self.week_combox.setVisible(True)
                 timing_dir = path
                 QMessageBox.information(self, "提示", "生效成功", QMessageBox.Yes)
+            else:
+                QMessageBox.information(self, "提示", "没有选择执行目录,生效失败", QMessageBox.Yes)
 
     def none_radio_method(self):
         if not self.hour_combox.isEnabled():
