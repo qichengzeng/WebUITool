@@ -897,7 +897,7 @@ class MainInit(QMainWindow):
                         excute_path =os.path.join(object_path,file)
                         test_case = pickle.load(open(excute_path,"rb"))
                         index = index + 1
-                        time.sleep(3)
+                        QApplication.processEvents()
                         self.statu.showMessage("共发现"+str(self.all_test_case)+"个测试数据文件"+"[正在执行测试用例："+test_case.title+"]")
                         self.progressBar.setValue(index)
                         self.single_excute_action_method_two(test_case)
