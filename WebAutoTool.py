@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication,QMainWindow,QAction,QLineEdit,QPushButton,QInputDialog,QTableWidget\
 ,QHeaderView,QLabel,QCompleter,QComboBox,QRadioButton,QMessageBox,QTextEdit,QDialog,QFileDialog, QTableWidgetItem\
-,QAbstractItemView,QMenu
+,QAbstractItemView,QMenu,QProgressBar
 from PyQt5.QtCore import QSize,Qt,QSortFilterProxyModel,QTimer
 from PyQt5.QtGui import QIcon
 import sys
@@ -175,7 +175,7 @@ class MainInit(QMainWindow):
         self.initUI()
         self.setWindowTitle("Web自动化测试工具")
         self.setWindowIcon(QIcon("a.ico"))
-        self.setFixedSize(QApplication.desktop().width(),QApplication.desktop().height())
+        # self.setFixedSize(QApplication.desktop().width(),QApplication.desktop().height())
         self.showMaximized()
     def read_config(self):
         self.cf = Config()
@@ -246,7 +246,14 @@ class MainInit(QMainWindow):
         self.view_log_action.triggered.connect(self.view_log_action_method)
 
         self.statu = self.statusBar()
-        self.statu.showMessage("ready123131313")
+        self.statu.showMessage("快来用我编写自动化脚本吧！！！")
+        self.progressBar = QProgressBar()
+        self.progressBar.setMaximumWidth(int(QApplication.desktop().width()/5))
+        self.excute_label = QLabel()
+        self.statu.addPermanentWidget(self.excute_label)
+        self.excute_label.setMaximumWidth(int(QApplication.desktop().width()/5))
+        self.statu.addPermanentWidget(self.progressBar)
+
 
         self.tool.addAction(self.single_excute_action)
         self.tool.addAction(self.all_excute_action)
@@ -874,6 +881,13 @@ class MainInit(QMainWindow):
             os.mkdir(base_dir)
             path = QFileDialog.getExistingDirectory(self,"请选择执行目录",base_dir)
         if path:
+            self.all_test_case = 0
+            for object_path,dirs,files in os.walk(path):
+                for file in files:
+                    if file.endswith(".web"):
+                        self.all_test_case = self.all_test_case + 1
+            self.progressBar.setMaximum(self.all_test_case)
+            index = 0
             for object_path,dirs,files in os.walk(path):
                 object_path = object_path
                 self.basename = os.path.basename(object_path)
@@ -882,7 +896,10 @@ class MainInit(QMainWindow):
                         global excute_path
                         excute_path =os.path.join(object_path,file)
                         test_case = pickle.load(open(excute_path,"rb"))
-                        self.result_label.setVisible(False)
+                        index = index + 1
+                        time.sleep(3)
+                        self.statu.showMessage("共发现"+str(self.all_test_case)+"个测试数据文件"+"[正在执行测试用例："+test_case.title+"]")
+                        self.progressBar.setValue(index)
                         self.single_excute_action_method_two(test_case)
             self.end_time = time.time()
             self.excute_all_status = 0
@@ -2112,7 +2129,6 @@ class MainInit(QMainWindow):
                 else:
                     self.result_label.setText(self.result_fail)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_fail+"\n")
-            self.statu.showMessage("用例执行完毕")
             if self.default_teardown_value == "每个用例执行完关闭浏览器":
                 self.driver_true.quit()
         except :
@@ -2121,7 +2137,6 @@ class MainInit(QMainWindow):
             self.true_dict["test_screenshot_png"](png_name)
             self.driver_true.quit()
             self.result_label.setText(self.result_error)
-            self.statu.showMessage("用例执行完毕")
             self.excute_script.logger.error("用例执行异常，请检查脚本\n")
     def single_excute_action_method_three(self):#用例失败后重跑成功删除该用例
         try:
@@ -2163,7 +2178,6 @@ class MainInit(QMainWindow):
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_fail + "\n")
                     self.result_fail_num += 1
                     # shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
-            self.statu.showMessage("用例执行完毕")
             end_time = time.time()
             if self.default_teardown_value == "每个用例执行完关闭浏览器":
                 self.driver_true.quit()
@@ -2189,7 +2203,6 @@ class MainInit(QMainWindow):
             self.true_dict["test_screenshot_png"](png_name)
             self.driver_true.quit()
             self.result_label.setText(self.result_error)
-            self.statu.showMessage("用例执行完毕")
             self.excute_script.logger.error("用例执行异常，请检查脚本\n")
             self.result_error_num += 1
             with open(os.path.join(os.path.dirname(__file__), "test_case_log", self.title_line_edit.text() + ".log"),
@@ -2226,12 +2239,16 @@ class MainInit(QMainWindow):
                     self.result_label.setText(self.result_success)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_success+"\n")
                     self.result_success_num += 1
+                    self.excute_label.setText(str(self.result_success_num)+"/"+str(self.result_fail_num)+"/"+str(self.result_error_num)+"/"+str(self.all_test_case))
                 else:
                     self.excute_script.logger.info("用例的期望结果是:" + test_case.exp)
                     self.excute_script.logger.info("用例的实际结果是:" + act_result)
                     self.result_label.setText(self.result_fail)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_fail+"\n")
                     self.result_fail_num += 1
+                    self.excute_label.setText(
+                        str(self.result_success_num) + "/" + str(self.result_fail_num) + "/" + str(
+                            self.result_error_num) + "/" + str(self.all_test_case))
                     shutil.copy(excute_path,os.path.join(os.path.dirname(__file__),"error_and_fail_test_case"))
             if test_case.assertmethod == "不相等":
                 if act_result != test_case.exp:
@@ -2240,6 +2257,9 @@ class MainInit(QMainWindow):
                     self.result_label.setText(self.result_success)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_success+"\n")
                     self.result_success_num += 1
+                    self.excute_label.setText(
+                        str(self.result_success_num) + "/" + str(self.result_fail_num) + "/" + str(
+                            self.result_error_num) + "/" + str(self.all_test_case))
                     # os.remove(excute_path)
                 else:
                     self.excute_script.logger.info("用例的期望结果是:" + test_case.exp)
@@ -2247,6 +2267,9 @@ class MainInit(QMainWindow):
                     self.result_label.setText(self.result_fail)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_fail+"\n")
                     self.result_fail_num += 1
+                    self.excute_label.setText(
+                        str(self.result_success_num) + "/" + str(self.result_fail_num) + "/" + str(
+                            self.result_error_num) + "/" + str(self.all_test_case))
                     shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
             end_time = time.time()
             if self.default_teardown_value == "每个用例执行完关闭浏览器":
@@ -2269,6 +2292,8 @@ class MainInit(QMainWindow):
             self.result_label.setText(self.result_error)
             self.excute_script.logger.error("用例执行异常，请检查脚本\n")
             self.result_error_num += 1
+            self.excute_label.setText(str(self.result_success_num) + "/" + str(self.result_fail_num) + "/" + str(
+                self.result_error_num) + "/" + str(self.all_test_case))
             with open(os.path.join(os.path.dirname(__file__), "test_case_log", test_case.title + ".log"),"r", encoding="utf-8") as f:
                 log_text = f.read()
             with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+") as f:
