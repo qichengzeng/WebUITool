@@ -160,6 +160,7 @@ class MainInit(QMainWindow):
         self.data_output_value_list =[]
         self.data_transfer_list = []
         self.data_transfer_text_list = []
+        self.back_data_list = []
         self.result_success = "用例执行通过"
         self.result_success_num = 0
         self.result_fail_num = 0
@@ -245,7 +246,7 @@ class MainInit(QMainWindow):
         self.view_log_action.triggered.connect(self.view_log_action_method)
 
         self.statu = self.statusBar()
-        self.statu.showMessage("ready")
+        self.statu.showMessage("ready123131313")
 
         self.tool.addAction(self.single_excute_action)
         self.tool.addAction(self.all_excute_action)
@@ -577,7 +578,6 @@ class MainInit(QMainWindow):
             QMessageBox.information(self,"提示","没有定时任务被执行",QMessageBox.Yes)
     def all_excute_action_four(self):#用例失败重跑几次
         rerun_num = int(self.fail_rerun_combox.currentText())
-        print(rerun_num)
         self.excute_all_status = 1
         if rerun_num != 0:
             for i in range(0,rerun_num):
@@ -718,76 +718,7 @@ class MainInit(QMainWindow):
                 if file.endswith(".web"):
                     excute_path = os.path.join(object_path, file)
                     test_case = pickle.load(open(excute_path, "rb"))
-                    self.title_line_edit.setText(test_case.title)
-                    self.url_line_edit.setText(test_case.url)
-                    self.exp_line_edit.setText(test_case.exp)
-                    self.list_clear()
-                    self.steps_table_row = len(test_case.step)
-                    self.table_row = len(test_case.step)
-                    self.data_table.setRowCount(self.table_row)
-                    self.steps_table.setRowCount(self.steps_table_row)
-
-                    for i in range(0, len(test_case.step)):
-                        self.data_name_list.append(QLineEdit(str(i + 1)))
-
-                        self.data_name_list[i].setReadOnly(True)
-
-                        self.data_name_list[i].setAlignment(Qt.AlignCenter)
-
-                        self.data_value_list.append(QLineEdit())
-
-                        self.data_value_list[i].setAlignment(Qt.AlignCenter)
-                        self.data_value_two_list.append(QLineEdit())
-
-                        self.data_value_two_list[i].setAlignment(Qt.AlignCenter)
-                        self.data_value_three_list.append(QLineEdit())
-                        self.data_value_three_list[i].setAlignment(Qt.AlignCenter)
-                        self.data_output_value_list.append(QLineEdit())
-                        self.data_output_value_list[i].setReadOnly(True)
-                        self.data_output_value_list[i].setAlignment(Qt.AlignCenter)
-                        self.data_transfer_list.append(QLineEdit())
-
-                        self.data_transfer_list[i].setAlignment(Qt.AlignCenter)
-                        self.data_transfer_list[i].setText(test_case.data_transfer[i])
-                        self.data_value_list[i].setText(test_case.data[i])
-                        self.data_value_two_list[i].setText(test_case.data_two[i])
-
-                        self.data_value_three_list[i].setText(test_case.data_three[i])
-                        if not self.data_value_list[i].text():
-                            self.data_value_two_list[i].setReadOnly(True)
-                        if not self.data_value_two_list[i].text():
-                            self.data_value_three_list[i].setReadOnly(True)
-                        self.data_value_list[i].editingFinished.connect(self.data_value_list_method)
-                        self.data_value_two_list[i].editingFinished.connect(self.data_value_two_list_method)
-                        self.data_table.setCellWidget(i, 0, self.data_name_list[i])
-                        self.data_table.setCellWidget(i, 1, self.data_value_list[i])
-
-                        self.data_table.setCellWidget(i, 2, self.data_value_two_list[i])
-                        self.data_table.setCellWidget(i, 3, self.data_value_three_list[i])
-                        self.data_table.setCellWidget(i, 4, self.data_output_value_list[i])
-                        self.data_table.setCellWidget(i, 5, self.data_transfer_list[i])
-                        self.step_combox_list.append(ExtendedComboBox())
-                        self.step_combox_list[i].addItems(list(self.driver_false.back_method_dict().keys()))
-                        self.step_combox_list[i].setCurrentText(test_case.step[i])
-
-                        self.page_combox_list.append(ExtendedComboBox())
-                        self.page_combox_list[i].addItems(self.sections_list)
-                        self.page_combox_list[i].setCurrentText(test_case.page[i])
-                        self.page_combox_list[i].currentIndexChanged.connect(self.page_combox_list_method)
-                        self.locator_name_combox_list.append(ExtendedComboBox())
-                        if self.page_combox_list[i].currentText() != "NONE":
-                            self.locator_name_combox_list[i].addItems(
-                                self.options_dict[self.page_combox_list[i].currentText()])
-                            self.locator_name_combox_list[i].setCurrentText(test_case.locator_name[i])
-                        else:
-                            self.locator_name_combox_list[i].addItem(
-                                self.options_dict[self.page_combox_list[i].currentText()])
-
-                        self.steps_table.setCellWidget(i, 0, self.step_combox_list[i])
-                        self.steps_table.setCellWidget(i, 1, self.page_combox_list[i])
-                        self.steps_table.setCellWidget(i, 2, self.locator_name_combox_list[i])
-
-                    self.single_excute_action_method_two()
+                    self.single_excute_action_method_two(test_case)
         self.end_time = time.time()
         self.excute_all_status = 0
         try:
@@ -951,79 +882,8 @@ class MainInit(QMainWindow):
                         global excute_path
                         excute_path =os.path.join(object_path,file)
                         test_case = pickle.load(open(excute_path,"rb"))
-                        self.title_line_edit.setText(test_case.title)
-                        self.url_line_edit.setText(test_case.url)
-                        self.exp_line_edit.setText(test_case.exp)
-                        self.list_clear()
-                        self.steps_table_row = len(test_case.step)
-                        self.table_row = len(test_case.step)
-                        self.data_table.setRowCount(self.table_row)
-                        self.steps_table.setRowCount(self.steps_table_row)
-
-                        for i in range(0, len(test_case.step)):
-                            self.data_name_list.append(QLineEdit(str(i + 1)))
-
-                            self.data_name_list[i].setReadOnly(True)
-
-                            self.data_name_list[i].setAlignment(Qt.AlignCenter)
-
-                            self.data_value_list.append(QLineEdit())
-
-                            self.data_value_list[i].setAlignment(Qt.AlignCenter)
-                            self.data_value_two_list.append(QLineEdit())
-
-                            self.data_value_two_list[i].setAlignment(Qt.AlignCenter)
-                            self.data_value_three_list.append(QLineEdit())
-                            self.data_value_three_list[i].setAlignment(Qt.AlignCenter)
-                            self.data_output_value_list.append(QLineEdit())
-                            self.data_output_value_list[i].setReadOnly(True)
-                            self.data_output_value_list[i].setAlignment(Qt.AlignCenter)
-                            self.data_transfer_list.append(QLineEdit())
-
-
-                            self.data_transfer_list[i].setAlignment(Qt.AlignCenter)
-                            self.data_transfer_list[i].setText(test_case.data_transfer[i])
-                            self.data_value_list[i].setText(test_case.data[i])
-                            self.data_value_two_list[i].setText(test_case.data_two[i])
-
-                            self.data_value_three_list[i].setText(test_case.data_three[i])
-                            if not self.data_value_list[i].text():
-                                self.data_value_two_list[i].setReadOnly(True)
-                            if not self.data_value_two_list[i].text():
-                                self.data_value_three_list[i].setReadOnly(True)
-                            self.data_value_list[i].editingFinished.connect(self.data_value_list_method)
-                            self.data_value_two_list[i].editingFinished.connect(self.data_value_two_list_method)
-                            self.data_table.setCellWidget(i, 0, self.data_name_list[i])
-                            self.data_table.setCellWidget(i, 1, self.data_value_list[i])
-
-                            self.data_table.setCellWidget(i, 2, self.data_value_two_list[i])
-                            self.data_table.setCellWidget(i, 3, self.data_value_three_list[i])
-                            self.data_table.setCellWidget(i, 4, self.data_output_value_list[i])
-                            self.data_table.setCellWidget(i, 5, self.data_transfer_list[i])
-                            self.step_combox_list.append(ExtendedComboBox())
-                            self.step_combox_list[i].addItems(list(self.driver_false.back_method_dict().keys()))
-                            self.step_combox_list[i].setCurrentText(test_case.step[i])
-
-                            self.page_combox_list.append(ExtendedComboBox())
-                            self.page_combox_list[i].addItems(self.sections_list)
-                            self.page_combox_list[i].setCurrentText(test_case.page[i])
-                            self.page_combox_list[i].currentIndexChanged.connect(self.page_combox_list_method)
-                            self.locator_name_combox_list.append(ExtendedComboBox())
-                            if self.page_combox_list[i].currentText() != "NONE":
-                                self.locator_name_combox_list[i].addItems(
-                                    self.options_dict[self.page_combox_list[i].currentText()])
-                                self.locator_name_combox_list[i].setCurrentText(test_case.locator_name[i])
-                            else:
-                                self.locator_name_combox_list[i].addItem(
-                                    self.options_dict[self.page_combox_list[i].currentText()])
-
-                            self.steps_table.setCellWidget(i, 0, self.step_combox_list[i])
-                            self.steps_table.setCellWidget(i, 1, self.page_combox_list[i])
-                            self.steps_table.setCellWidget(i, 2, self.locator_name_combox_list[i])
-
-                            # self.list_text_clear()
-                            # print("111")
-                        self.single_excute_action_method_two()
+                        self.result_label.setVisible(False)
+                        self.single_excute_action_method_two(test_case)
             self.end_time = time.time()
             self.excute_all_status = 0
             try:
@@ -1806,6 +1666,310 @@ class MainInit(QMainWindow):
             self.exp_line_edit.setText(self.global_para[int(self.exp_line_edit.text().split(".")[0])])
         png_name = os.path.join(os.path.dirname(__file__),"test_screenshot_png",self.title_line_edit.text()+".png")
         self.true_dict["test_screenshot_png"](png_name)
+    def package_excute_all_method(self,test_case):
+        with open(os.path.join(os.path.dirname(__file__), "SERVICEIP.ini"), "r") as f:
+            ip_text = f.read()
+        self.driver_true.get(ip_text + test_case.url)
+        self.driver_true.maximize_window()
+        self.excute_script = BasePage(self.driver_true, test_case.title + ".log")
+        # self.excute_script.logger.info("\n")
+        self.excute_script.logger.info("{}_用例开始执行".format(test_case.title))
+        self.true_dict = self.excute_script.back_method_dict()
+        for i in range(0, len(test_case.step)):
+            if test_case.page[i] == "NONE":  # 此时为浏览器没有元素定位操作和python语句操作
+                para_num = len(inspect.getfullargspec(self.true_dict[test_case.step[i]]).args)
+                if para_num > 1:  # 有参数
+                    if para_num == 2:
+                        if test_case.step[i] == "get":
+                            if test_case.data[i].endswith(".ZQC"):
+                                index = int(test_case.data[i].split(".")[0])
+                                back_data = self.true_dict[test_case.step[i]](ip_text + self.global_para[index])
+                            else:
+                                back_data = self.true_dict[test_case.step[i]](ip_text + test_case.data[i])
+                                self.back_data_list.append(back_data)
+                            if back_data:  # 判断是否有返回值
+                                if test_case.data_transfer[i]:
+                                    if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                        num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                        if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                            test_case.data[num] = back_data
+                                        if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                            test_case.data_two[num] = back_data
+                                        if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                            test_case.data_three[num] = back_data
+                                        index = eval(test_case.data_transfer[i])[2]
+                                        self.global_para[index] = back_data
+                                    if len(eval(test_case.data_transfer[i])) == 1:
+                                        index = eval(test_case.data_transfer[i])[0]
+                                        self.global_para[index] = back_data
+                                    if len(eval(test_case.data_transfer[i])) == 2:
+                                        num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                        if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                            test_case.data[num] = back_data
+                                        if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                            test_case.data_two[num] = back_data
+                                        if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                            test_case.data_three[num] = back_data
+                        else:
+                            if test_case.data[i].endswith(".ZQC"):
+                                index = int(test_case.data[i].split(".")[0])
+                                back_data = self.true_dict[test_case.step[i]](self.global_para[index])
+                                self.back_data_list.append(back_data)
+                            else:
+                                back_data = self.true_dict[test_case.step[i]](test_case.data[i])
+                                self.back_data_list.append(back_data)
+                            if back_data:  # 判断是否有返回值
+                                if test_case.data_transfer[i]:
+                                    if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                        num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                        if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                            test_case.data[num] = back_data
+                                        if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                            test_case.data_two[num] = back_data
+                                        if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                            test_case.data_three[num] = back_data
+                                        index = eval(test_case.data_transfer[i])[2]
+                                        self.global_para[index] = back_data
+                                    if len(eval(test_case.data_transfer[i])) == 1:
+                                        index = eval(test_case.data_transfer[i])[0]
+                                        self.global_para[index] = back_data
+                                    if len(eval(test_case.data_transfer[i])) == 2:
+                                        num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                        if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                            test_case.data[num] = back_data
+                                        if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                            test_case.data_two[num] = back_data
+                                        if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                            test_case.data_three[num] = back_data
+                    if para_num == 3:
+                        if test_case.data[i].endswith(".ZQC"):
+                            test_case.data[i] = (self.global_para[int(test_case.data[i].split(".")[0])])
+                        if test_case.data_two[i].endswith(".ZQC"):
+                            test_case.data_two[i] = self.global_para[int(test_case.data_two[i].split(".")[0])]
+
+                        back_data = self.true_dict[test_case.step[i]](test_case.data[i], test_case.data_two[i])
+                        self.back_data_list.append(back_data)
+                        if back_data:  # 判断是否有返回值
+                            if test_case.data_transfer[i]:
+                                if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                    num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                    if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                        test_case.data[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                        test_case.data_two[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                        test_case.data_three[num] = back_data
+                                    index = eval(test_case.data_transfer[i])[2]
+                                    self.global_para[index] = back_data
+                                if len(eval(test_case.data_transfer[i])) == 1:
+                                    index = eval(test_case.data_transfer[i])[0]
+                                    self.global_para[index] = back_data
+                                if len(eval(test_case.data_transfer[i])) == 2:
+                                    num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                    if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                        test_case.data[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                        test_case.data_two[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                        test_case.data_three[num] = back_data
+                    if para_num == 4:
+                        if test_case.data[i].endswith(".ZQC"):
+                            test_case.data[i] = self.global_para[int(test_case.data[i].split(".")[0])]
+                        if test_case.data_two[i].endswith(".ZQC"):
+                            test_case.data_two[i] = self.global_para[int(test_case.data_two[i].split(".")[0])]
+                        if test_case.data_three[i].endswith(".ZQC"):
+                            test_case.data_three[i] = self.global_para[int(test_case.data_three[i].split(".")[0])]
+                        back_data = self.true_dict[test_case.step[i]](test_case.data[i], test_case.data_two[i],
+                                                                      test_case.data_three[i])
+                        self.back_data_list.append(back_data)
+                        if back_data:  # 判断是否有返回值
+                            if test_case.data_transfer[i]:
+                                if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                    num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                    if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                        test_case.data[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                        test_case.data_two[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                        test_case.data_three[num] = back_data
+                                    index = eval(test_case.data_transfer[i])[2]
+                                    self.global_para[index] = back_data
+                                if len(eval(test_case.data_transfer[i])) == 1:
+                                    index = eval(test_case.data_transfer[i])[0]
+                                    self.global_para[index] = back_data
+                                if len(eval(test_case.data_transfer[i])) == 2:
+                                    num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                    if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                        test_case.data[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                        test_case.data_two[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                        test_case.data_three[num] = back_data
+                else:  # 无参数
+                    back_data = self.true_dict[test_case.step[i]]()
+                    self.back_data_list.append(back_data)
+                    if back_data:  # 判断是否有返回值
+                        if test_case.data_transfer[i]:
+                            if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                    test_case.data[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                    test_case.data_two[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                    test_case.data_three[num] = back_data
+                                index = eval(test_case.data_transfer[i])[2]
+                                self.global_para[index] = back_data
+                            if len(eval(test_case.data_transfer[i])) == 1:
+                                index = eval(test_case.data_transfer[i])[0]
+                                self.global_para[index] = back_data
+                            if len(eval(test_case.data_transfer[i])) == 2:
+                                num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                    test_case.data[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                    test_case.data_two[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                    test_case.data_three[num] = back_data
+            else:  # 为浏览器存在元素定位操作
+                para_num = len(inspect.getfullargspec(self.true_dict[test_case.step[i]]).args)
+                locator_name = self.cf.back_locator_tuple(test_case.page[i], test_case.locator_name[i])
+                if para_num > 2:  # 有参数
+                    if para_num == 3:
+                        if test_case.data[i] == "USERNAME":
+                            file_path = os.path.join(os.path.dirname(__file__), "LOGIN.ini")
+                            with open(file_path, "r") as f:
+                                read_text = f.read()
+                                read_list = read_text.split(";")
+                            self.true_dict[test_case.step[i]](locator_name, read_list[0])
+                            continue
+                        if test_case.data[i] == "PASSWORD":
+                            file_path = os.path.join(os.path.dirname(__file__), "LOGIN.ini")
+                            with open(file_path, "r") as f:
+                                read_text = f.read()
+                                read_list = read_text.split(";")
+                            self.true_dict[test_case.step[i]](locator_name, read_list[1])
+                            continue
+                        if test_case.data[i].endswith(".ZQC"):
+                            test_case.data[i] = self.global_para[int(test_case.data[i].split(".")[0])]
+                        back_data = self.true_dict[test_case.step[i]](locator_name, test_case.data[i])
+                        self.back_data_list.append(back_data)
+                        if back_data:  # 判断是否有返回值
+                            if test_case.data_transfer[i]:
+                                if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                    num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                    if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                        test_case.data[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                        test_case.data_two[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                        test_case.data_three[num] = back_data
+                                    index = eval(test_case.data_transfer[i])[2]
+                                    self.global_para[index] = back_data
+                                if len(eval(test_case.data_transfer[i])) == 1:
+                                    index = eval(test_case.data_transfer[i])[0]
+                                    self.global_para[index] = back_data
+                                if len(eval(test_case.data_transfer[i])) == 2:
+                                    num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                    if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                        test_case.data[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                        test_case.data_two[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                        test_case.data_three[num] = back_data
+                    if para_num == 4:
+                        if test_case.data[i].endswith(".ZQC"):
+                            test_case.data[i] = self.global_para[int(test_case.data[i].split(".")[0])]
+                        if test_case.data_two[i].endswith(".ZQC"):
+                            test_case.data_two[i] = self.global_para[int(test_case.data_two[i].split(".")[0])]
+                        back_data = self.true_dict[test_case.step[i]](locator_name, test_case.data[i],
+                                                                      test_case.data_two[i])
+                        self.back_data_list.append(back_data)
+                        if back_data:  # 判断是否有返回值
+                            if test_case.data_transfer[i]:
+                                if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                    num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                    if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                        test_case.data[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                        test_case.data_two[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                        test_case.data_three[num] = back_data
+                                    index = eval(test_case.data_transfer[i])[2]
+                                    self.global_para[index] = back_data
+                                if len(eval(test_case.data_transfer[i])) == 1:
+                                    index = eval(test_case.data_transfer[i])[0]
+                                    self.global_para[index] = back_data
+                                if len(eval(test_case.data_transfer[i])) == 2:
+                                    num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                    if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                        test_case.data[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                        test_case.data_two[num] = back_data
+                                    if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                        test_case.data_three[num] = back_data
+                    if para_num == 5:
+                        if test_case.data[i].endswith(".ZQC"):
+                            test_case.data[i] = self.global_para[int(test_case.data[i].split(".")[0])]
+                        if test_case.data_two[i].endswith(".ZQC"):
+                            test_case.data_two[i] = self.global_para[int(test_case.data_two[i].split(".")[0])]
+                        if test_case.data_three[i].endswith(".ZQC"):
+                            test_case.data_three[i] = self.global_para[int(test_case.data_three[i].split(".")[0])]
+                        back_data = self.true_dict[test_case.step[i]](locator_name, test_case.data[i],
+                                                                      test_case.data_two[i], test_case.data_three[i])
+                        self.back_data_list.append(back_data)
+                        if back_data:  # 判断是否有返回值
+                            if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                    test_case.data[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                    test_case.data_two[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                    test_case.data_three[num] = back_data
+                                index = eval(test_case.data_transfer[i])[2]
+                                self.global_para[index] = back_data
+                            if len(eval(test_case.data_transfer[i])) == 1:
+                                index = eval(test_case.data_transfer[i])[0]
+                                self.global_para[index] = back_data
+                            if len(eval(test_case.data_transfer[i])) == 2:
+                                num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                    test_case.data[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                    test_case.data_two[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                    test_case.data_three[num] = back_data
+                else:  # 无参数
+                    back_data = self.true_dict[test_case.step[i]](locator_name)
+                    self.back_data_list.append(back_data)
+                    if back_data:  # 判断是否有返回值
+                        if test_case.data_transfer[i]:
+                            if len(eval(test_case.data_transfer[i])) == 3:  # 判断是否有参数传递
+                                num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                    test_case.data[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                    test_case.data_two[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                    test_case.data_three[num] = back_data
+                                index = eval(test_case.data_transfer[i])[2]
+                                self.global_para[index] = back_data
+                            if len(eval(test_case.data_transfer[i])) == 1:
+                                index = eval(test_case.data_transfer[i])[0]
+                                self.global_para[index] = back_data
+                            if len(eval(test_case.data_transfer[i])) == 2:
+                                num = int(eval(test_case.data_transfer[i])[0]) - 1
+                                if int(eval(test_case.data_transfer[i])[1]) == 1:
+                                    test_case.data[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 2:
+                                    test_case.data_two[num] = back_data
+                                if int(eval(test_case.data_transfer[i])[1]) == 3:
+                                    test_case.data_three[num] = back_data
+        if test_case.exp.endswith(".ZQC"):
+            test_case.exp = self.global_para[int(test_case.exp.split(".")[0])]
+        png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png", test_case.title + ".png")
+        self.true_dict["test_screenshot_png"](png_name)
     def single_excute_action_method(self):
         self.result_label.setVisible(False)
         if not self.title_line_edit.text():
@@ -2037,7 +2201,7 @@ class MainInit(QMainWindow):
                 f.write(TestHtmlReport.HTMLROWERROR.format(self.basename, self.title_line_edit.text(), log_text,
                                                            end_time - start_time, self.result_label.text()))
 
-    def single_excute_action_method_two(self):#用例失败copy一份出来
+    def single_excute_action_method_two(self,test_case):#用例失败copy一份出来
         try:
             if self.chrome_radio.isChecked():
                 self.driver_true = webdriver.Chrome()
@@ -2053,57 +2217,62 @@ class MainInit(QMainWindow):
             return None
         start_time = time.time()
         try:
-            self.package_excute_method()
-            self.act_line_edit.setText(self.data_output_value_list[-1].text())
-            if self.assert_method_combox.currentText() == "相等":
-                if self.act_line_edit.text() == self.exp_line_edit.text():
+            self.package_excute_all_method(test_case)
+            act_result = self.back_data_list[-1]
+            if test_case.assertmethod == "相等":
+                if act_result == test_case.exp:
+                    self.excute_script.logger.info("用例的期望结果是:" + test_case.exp )
+                    self.excute_script.logger.info("用例的实际结果是:" + act_result )
                     self.result_label.setText(self.result_success)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_success+"\n")
                     self.result_success_num += 1
-                    # os.remove(excute_path)
                 else:
+                    self.excute_script.logger.info("用例的期望结果是:" + test_case.exp)
+                    self.excute_script.logger.info("用例的实际结果是:" + act_result)
                     self.result_label.setText(self.result_fail)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_fail+"\n")
                     self.result_fail_num += 1
                     shutil.copy(excute_path,os.path.join(os.path.dirname(__file__),"error_and_fail_test_case"))
-            if self.assert_method_combox.currentText() == "不相等":
-                if self.act_line_edit.text() != self.exp_line_edit.text():
+            if test_case.assertmethod == "不相等":
+                if act_result != test_case.exp:
+                    self.excute_script.logger.info("用例的期望结果是:" + test_case.exp )
+                    self.excute_script.logger.info("用例的实际结果是:" + act_result)
                     self.result_label.setText(self.result_success)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_success+"\n")
                     self.result_success_num += 1
                     # os.remove(excute_path)
                 else:
+                    self.excute_script.logger.info("用例的期望结果是:" + test_case.exp)
+                    self.excute_script.logger.info("用例的实际结果是:" + act_result)
                     self.result_label.setText(self.result_fail)
                     self.excute_script.logger.info("用例的执行情况是:" + self.result_fail+"\n")
                     self.result_fail_num += 1
                     shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
-            self.statu.showMessage("用例执行完毕")
             end_time = time.time()
             if self.default_teardown_value == "每个用例执行完关闭浏览器":
                 self.driver_true.quit()
-            with open(os.path.join(os.path.dirname(__file__), "test_case_log",self.title_line_edit.text()+".log"), "r", encoding="utf-8") as f:
+            with open(os.path.join(os.path.dirname(__file__), "test_case_log",test_case.title+".log"), "r", encoding="utf-8") as f:
                 log_text = f.read()
             with open(os.path.join(os.path.dirname(__file__),"test_case_report",self.excute_time+"_report.html"),"a+") as f:
                 if self.result_label.text()== self.result_success:
-                   f.write(TestHtmlReport.HTMLROWPASS.format(self.basename,self.title_line_edit.text(),log_text,end_time-start_time,self.result_label.text()))
+                   f.write(TestHtmlReport.HTMLROWPASS.format(self.basename,test_case.title,log_text,end_time-start_time,self.result_label.text()))
                 if self.result_label.text() == self.result_fail:
-                   f.write(TestHtmlReport.HTMLROWUNPASS.format(self.basename,self.title_line_edit.text(), log_text,
+                   f.write(TestHtmlReport.HTMLROWUNPASS.format(self.basename,test_case.title, log_text,
                                                           end_time - start_time, self.result_label.text()))
         except:
             shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
             end_time = time.time()
             png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png",
-                                    self.title_line_edit.text() + ".png")
+                                    test_case.title + ".png")
             self.true_dict["test_screenshot_png"](png_name)
             self.driver_true.quit()
             self.result_label.setText(self.result_error)
-            self.statu.showMessage("用例执行完毕")
             self.excute_script.logger.error("用例执行异常，请检查脚本\n")
             self.result_error_num += 1
-            with open(os.path.join(os.path.dirname(__file__), "test_case_log", self.title_line_edit.text() + ".log"),"r", encoding="utf-8") as f:
+            with open(os.path.join(os.path.dirname(__file__), "test_case_log", test_case.title + ".log"),"r", encoding="utf-8") as f:
                 log_text = f.read()
             with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+") as f:
-                f.write(TestHtmlReport.HTMLROWERROR.format(self.basename,self.title_line_edit.text(),log_text,end_time - start_time,self.result_label.text()))
+                f.write(TestHtmlReport.HTMLROWERROR.format(self.basename,test_case.title,log_text,end_time - start_time,self.result_label.text()))
 
 
     def sub_step_btn_method(self):

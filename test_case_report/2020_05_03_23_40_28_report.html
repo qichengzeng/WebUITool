@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试报告</title>
+    <script language="javascript">
+
+function show(obj){
+    var ele_log = document.getElementsByName('log');
+    var ele_detail = document.getElementsByName("detail");
+    var i = ele_log.length;
+    while (i--) {
+        if (ele_detail[i] ==obj) {
+            break
+        }
+    }
+    if (ele_log[i].hasAttribute("hidden")){
+          ele_log[i].removeAttribute("hidden");
+          ele_detail[i].innerHTML="收起";
+    }else {
+          ele_detail[i].innerHTML="详细";
+          ele_log[i].setAttribute("hidden","true");
+    }
+}
+function show_pass() {
+    if (document.getElementById("pass").checked) {
+        var eles = document.getElementsByName("rpass")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+           eles[index].removeAttribute("hidden")
+        }
+    }
+    else {
+        var eles = document.getElementsByName("rpass")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+            eles[index].setAttribute("hidden", "true")
+        }
+    }
+}
+function show_unpass() {
+    if (document.getElementById("unpass").checked) {
+        var eles = document.getElementsByName("runpass")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+           eles[index].removeAttribute("hidden")
+        }
+    }
+    else {
+        var eles = document.getElementsByName("runpass")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+            eles[index].setAttribute("hidden", "true")
+        }
+    }
+}
+function show_error() {
+    if (document.getElementById("error").checked) {
+        var eles = document.getElementsByName("rerror")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+           eles[index].removeAttribute("hidden")
+        }
+    }
+    else {
+        var eles = document.getElementsByName("rerror")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+            eles[index].setAttribute("hidden", "true")
+        }
+    }
+}
+    
+</script>
+</head>
+<body>
+ <h1>自动化测试报告</h1>
+ <p class ="attribute"><strong>浏览器环境：Chrome_driver</strong></p>
+ <p class ="attribute"><strong>测试地址：http://test.ohaoya.com/</strong></p>
+ <p class ="attribute"><strong>用例开始执行时间：2020_05_03_23_40_28</strong></p>
+ <p class ="attribute"><strong>总计耗时：86.5833387374878</strong></p>
+ <p class ="attribute"><strong>测试结果：共5,通过2,失败2,错误1,通过率=40.00%</strong></p>
+ <p class ="attribute"><strong>用例执行情况：</strong></p>
+ <label style="background-color: green;"><input id="pass" checked onclick="show_pass()" type="checkbox" value="" />用例通过 : 2&nbsp&nbsp&nbsp </label>
+ <label style="background-color: yellow;"><input id="unpass" checked onclick="show_unpass()" type="checkbox" value="" />用例不通过 : 2&nbsp&nbsp </label>
+ <label style="background-color: red;"><input id="error" checked onclick="show_error()" type="checkbox" value="" />用例异常 : 1&nbsp&nbsp&nbsp </label>
+ <table id="result_table" style="text-align: center" width="100%" border="1" cellpadding="2" cellspacing="1">
+     <colgroup>
+         <col align="left">
+         <col align="right">
+         <col align="right">
+         <col align="right">
+         <col align="right">
+     </colgroup>
+     <tr id ="header_row" style="font-weight: bold;font-size: 16px;">
+         <td>所属模块</td>
+         <td>用例标题</td>
+         <td>日志记录</td>
+         <td>耗费时间</td>
+         <td>结果</td>
+     </tr>
+    
+<tr name="rerror">
+         <td>b_登录模块</td>
+         <td>a_正常登录</td>
+         <td><a href="javascript:void(0)" onclick="show(this)" style="text-align: center" name="detail">详细</a>
+             <pre name="log" style="text-align: left" hidden="true">
+2020-05-03 23:39:09,772____test_case___INFO___a_正常登录_用例开始执行
+2020-05-03 23:39:09,778____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-03 23:39:09,780____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-03 23:39:09,802____test_case___ERROR___{}元素查找失败
+2020-05-03 23:39:09,803____test_case___ERROR___('xpath', "//input[@name='user_name']")元素输入框输入zengqicheng内容失败
+2020-05-03 23:39:09,805____test_case___INFO___正在准备截图
+2020-05-03 23:39:10,124____test_case___INFO___截图成功
+2020-05-03 23:39:12,235____test_case___ERROR___用例执行异常，请检查脚本
+
+2020-05-03 23:40:39,621____test_case___INFO___a_正常登录_用例开始执行
+2020-05-03 23:40:39,621____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-03 23:40:39,622____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-03 23:40:39,633____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-03 23:40:39,689____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-03 23:40:39,690____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-03 23:40:39,690____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-03 23:40:39,700____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-03 23:40:39,753____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-03 23:40:39,754____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-03 23:40:39,754____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-03 23:40:39,764____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-03 23:40:39,802____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-03 23:40:39,802____test_case___INFO___正在准备等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见
+2020-05-03 23:41:10,035____test_case___ERROR___等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见失败
+2020-05-03 23:41:10,036____test_case___INFO___正在准备截图
+2020-05-03 23:41:10,644____test_case___INFO___截图成功
+2020-05-03 23:41:12,810____test_case___ERROR___用例执行异常，请检查脚本
+
+
+         </pre>
+         </td>
+         <td>33.874366760253906</td>
+         <td style="background-color: red">用例执行异常</td>
+     </tr>
+    
+<tr name="runpass">
+         <td>b_登录模块</td>
+         <td>b_登录密码错误</td>
+         <td><a href="javascript:void(0)" onclick="show(this)" style="text-align: center" name="detail">详细</a>
+             <pre name="log" style="text-align: left" hidden="true">
+2020-05-03 23:39:18,716____test_case___INFO___b_登录密码错误_用例开始执行
+2020-05-03 23:39:18,719____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-03 23:39:18,720____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-03 23:39:18,739____test_case___ERROR___{}元素查找失败
+2020-05-03 23:39:18,740____test_case___ERROR___('xpath', "//input[@name='user_name']")元素输入框输入zengqicheng内容失败
+2020-05-03 23:39:18,742____test_case___INFO___正在准备截图
+2020-05-03 23:39:19,063____test_case___INFO___截图成功
+2020-05-03 23:39:21,635____test_case___ERROR___用例执行异常，请检查脚本
+
+2020-05-03 23:41:19,748____test_case___INFO___b_登录密码错误_用例开始执行
+2020-05-03 23:41:19,748____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-03 23:41:19,749____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-03 23:41:19,760____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-03 23:41:19,852____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-03 23:41:19,853____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-03 23:41:19,853____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-03 23:41:19,863____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-03 23:41:19,928____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185_内容成功
+2020-05-03 23:41:19,928____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-03 23:41:19,929____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-03 23:41:19,938____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-03 23:41:19,991____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-03 23:41:19,992____test_case___INFO___正在准备等待('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见
+2020-05-03 23:41:21,028____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见成功
+2020-05-03 23:41:21,029____test_case___INFO___正在准备获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素的文本值
+2020-05-03 23:41:21,029____test_case___INFO___正在准备查找('xpath', "//strong[text()='警告!']//following-sibling::span")元素
+2020-05-03 23:41:21,035____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素查找成功
+2020-05-03 23:41:21,046____test_case___INFO___获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素文本值成功_密码错误，如果您是旧系统的医生请使用找回密码！
+2020-05-03 23:41:21,046____test_case___INFO___正在准备截图
+2020-05-03 23:41:21,637____test_case___INFO___截图成功
+2020-05-03 23:41:21,637____test_case___INFO___用例的期望结果是:密码错误！
+
+2020-05-03 23:41:21,638____test_case___INFO___用例的实际结果是:密码错误，如果您是旧系统的医生请使用找回密码！
+
+2020-05-03 23:41:21,638____test_case___INFO___用例的执行情况是:用例执行失败
+
+
+         </pre>
+         </td>
+         <td>5.242974519729614</td>
+         <td style="background-color: yellow">用例执行失败</td>
+     </tr>
+    
+     <tr name="rpass">
+         <td>b_登录模块</td>
+         <td>c_登录密码为空</td>
+         <td><a href="javascript:void(0)" onclick="show(this)" style="text-align: center" name="detail">详细</a>
+             <pre name="log" style="text-align: left" hidden="true">
+2020-05-03 23:41:30,788____test_case___INFO___c_登录密码为空_用例开始执行
+2020-05-03 23:41:30,789____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-03 23:41:30,790____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-03 23:41:30,800____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-03 23:41:30,870____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-03 23:41:30,871____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-03 23:41:30,873____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-03 23:41:30,883____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-03 23:41:30,919____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入__内容成功
+2020-05-03 23:41:30,920____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-03 23:41:30,921____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-03 23:41:30,932____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-03 23:41:31,056____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-03 23:41:31,057____test_case___INFO___正在准备等待('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见
+2020-05-03 23:41:31,081____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见成功
+2020-05-03 23:41:31,082____test_case___INFO___正在准备获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素的文本值
+2020-05-03 23:41:31,082____test_case___INFO___正在准备查找('xpath', "//strong[text()='警告!']//following-sibling::span")元素
+2020-05-03 23:41:31,088____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素查找成功
+2020-05-03 23:41:31,100____test_case___INFO___获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素文本值成功_密码不能为空！
+2020-05-03 23:41:31,100____test_case___INFO___正在准备截图
+2020-05-03 23:41:31,734____test_case___INFO___截图成功
+2020-05-03 23:41:31,734____test_case___INFO___用例的期望结果是:密码不能为空！
+
+2020-05-03 23:41:31,735____test_case___INFO___用例的实际结果是:密码不能为空！
+
+2020-05-03 23:41:31,735____test_case___INFO___用例的执行情况是:用例执行通过
+
+
+         </pre>
+         </td>
+         <td>4.192783355712891</td>
+         <td style="background-color: green">用例执行通过</td>
+     </tr>
+     
+     <tr name="rpass">
+         <td>b_登录模块</td>
+         <td>d_登录用户名为空</td>
+         <td><a href="javascript:void(0)" onclick="show(this)" style="text-align: center" name="detail">详细</a>
+             <pre name="log" style="text-align: left" hidden="true">
+2020-05-03 23:41:41,150____test_case___INFO___d_登录用户名为空_用例开始执行
+2020-05-03 23:41:41,151____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-03 23:41:41,152____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-03 23:41:41,163____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-03 23:41:41,198____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入__内容成功
+2020-05-03 23:41:41,199____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-03 23:41:41,200____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-03 23:41:41,213____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-03 23:41:41,273____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-03 23:41:41,274____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-03 23:41:41,275____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-03 23:41:41,284____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-03 23:41:41,432____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-03 23:41:41,433____test_case___INFO___正在准备等待('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见
+2020-05-03 23:41:41,464____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见成功
+2020-05-03 23:41:41,465____test_case___INFO___正在准备获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素的文本值
+2020-05-03 23:41:41,465____test_case___INFO___正在准备查找('xpath', "//strong[text()='警告!']//following-sibling::span")元素
+2020-05-03 23:41:41,473____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素查找成功
+2020-05-03 23:41:41,485____test_case___INFO___获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素文本值成功_用户名非法！
+2020-05-03 23:41:41,485____test_case___INFO___正在准备截图
+2020-05-03 23:41:42,129____test_case___INFO___截图成功
+2020-05-03 23:41:42,129____test_case___INFO___用例的期望结果是:用户名非法！
+
+2020-05-03 23:41:42,130____test_case___INFO___用例的实际结果是:用户名非法！
+
+2020-05-03 23:41:42,130____test_case___INFO___用例的执行情况是:用例执行通过
+
+
+         </pre>
+         </td>
+         <td>4.425159215927124</td>
+         <td style="background-color: green">用例执行通过</td>
+     </tr>
+     
+<tr name="runpass">
+         <td>b_登录模块</td>
+         <td>e_没有注册的医生账号</td>
+         <td><a href="javascript:void(0)" onclick="show(this)" style="text-align: center" name="detail">详细</a>
+             <pre name="log" style="text-align: left" hidden="true">
+2020-05-03 23:41:51,293____test_case___INFO___e_没有注册的医生账号_用例开始执行
+2020-05-03 23:41:51,294____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-03 23:41:51,295____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-03 23:41:51,305____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-03 23:41:51,368____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_00000_内容成功
+2020-05-03 23:41:51,369____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-03 23:41:51,369____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-03 23:41:51,382____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-03 23:41:51,445____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-03 23:41:51,445____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-03 23:41:51,446____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-03 23:41:51,454____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-03 23:41:51,506____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-03 23:41:51,507____test_case___INFO___正在准备等待('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见
+2020-05-03 23:41:52,545____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见成功
+2020-05-03 23:41:52,546____test_case___INFO___正在准备获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素的文本值
+2020-05-03 23:41:52,546____test_case___INFO___正在准备查找('xpath', "//strong[text()='警告!']//following-sibling::span")元素
+2020-05-03 23:41:52,553____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素查找成功
+2020-05-03 23:41:52,564____test_case___INFO___获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素文本值成功_医生账号不存在，如果您是旧系统的医生请使用找回密码！
+2020-05-03 23:41:52,565____test_case___INFO___正在准备截图
+2020-05-03 23:41:53,171____test_case___INFO___截图成功
+2020-05-03 23:41:53,172____test_case___INFO___用例的期望结果是:医生账号不存在！
+
+2020-05-03 23:41:53,172____test_case___INFO___用例的实际结果是:医生账号不存在，如果您是旧系统的医生请使用找回密码！
+
+2020-05-03 23:41:53,173____test_case___INFO___用例的执行情况是:用例执行失败
+
+
+         </pre>
+         </td>
+         <td>5.3237810134887695</td>
+         <td style="background-color: yellow">用例执行失败</td>
+     </tr>
+    
+ </table>
+</body>
+</html>
+    

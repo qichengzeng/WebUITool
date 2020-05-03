@@ -1,5 +1,6 @@
+#encoding=gbk
 class TestHtmlReport:
-    HTMLSCRIPt ="""
+    HTMLSCRIPt = """
 function show(obj){
     var ele_log = document.getElementsByName('log');
     var ele_detail = document.getElementsByName("detail");
