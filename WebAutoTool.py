@@ -718,6 +718,14 @@ class MainInit(QMainWindow):
         self.result_error_num = 0
         self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
         self.start_time = time.time()
+        self.all_test_case = 0
+        for object_path, dirs, files in os.walk(excute_path):
+            for file in files:
+                if file.endswith(".web"):
+                    self.all_test_case = self.all_test_case + 1
+        self.progressBar.setMaximum(self.all_test_case)
+        index = 0
+        self.del_file(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
         for object_path, dirs, files in os.walk(excute_path):
             object_path = object_path
             self.basename = os.path.basename(object_path)
@@ -725,7 +733,11 @@ class MainInit(QMainWindow):
                 if file.endswith(".web"):
                     excute_path = os.path.join(object_path, file)
                     test_case = pickle.load(open(excute_path, "rb"))
-                    self.single_excute_action_method_two(test_case)
+                    index = index + 1
+                    QApplication.processEvents()
+                    self.statu.showMessage("共发现" + str(self.all_test_case) + "个测试数据文件" + "[正在执行测试用例：" + test_case.title + "]")
+                    self.progressBar.setValue(index)
+                    self.single_excute_action_method_two(test_case,excute_path)
         self.end_time = time.time()
         self.excute_all_status = 0
         try:
@@ -888,6 +900,7 @@ class MainInit(QMainWindow):
                         self.all_test_case = self.all_test_case + 1
             self.progressBar.setMaximum(self.all_test_case)
             index = 0
+            self.del_file(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
             for object_path,dirs,files in os.walk(path):
                 object_path = object_path
                 self.basename = os.path.basename(object_path)
@@ -900,7 +913,7 @@ class MainInit(QMainWindow):
                         QApplication.processEvents()
                         self.statu.showMessage("共发现"+str(self.all_test_case)+"个测试数据文件"+"[正在执行测试用例："+test_case.title+"]")
                         self.progressBar.setValue(index)
-                        self.single_excute_action_method_two(test_case)
+                        self.single_excute_action_method_two(test_case,excute_path)
             self.end_time = time.time()
             self.excute_all_status = 0
             try:
@@ -2214,7 +2227,7 @@ class MainInit(QMainWindow):
                 f.write(TestHtmlReport.HTMLROWERROR.format(self.basename, self.title_line_edit.text(), log_text,
                                                            end_time - start_time, self.result_label.text()))
 
-    def single_excute_action_method_two(self,test_case):#用例失败copy一份出来
+    def single_excute_action_method_two(self,test_case,excute_path):#用例失败copy一份出来
         try:
             if self.chrome_radio.isChecked():
                 self.driver_true = webdriver.Chrome()
@@ -2283,7 +2296,7 @@ class MainInit(QMainWindow):
                    f.write(TestHtmlReport.HTMLROWUNPASS.format(self.basename,test_case.title, log_text,
                                                           end_time - start_time, self.result_label.text()))
         except:
-            shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
+            shutil.copy(excute_path, os.path.join(os.path.dirname(__file__),"error_and_fail_test_case"))
             end_time = time.time()
             png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png",
                                     test_case.title + ".png")
@@ -2556,9 +2569,21 @@ class MainInit(QMainWindow):
         if not os.path.exists(file_path):
             with open(file_path, "w+") as f:
                 pass
+
+    def del_file(self,path):
+        ls = os.listdir(path)
+        for i in ls:
+            c_path = os.path.join(path, i)
+            if os.path.isdir(c_path):
+                self.del_file(c_path)
+            else:
+                os.remove(c_path)
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     initmain = MainInit()
     initmain.create_all_dir()
     sys.exit(app.exec_())
+
 
