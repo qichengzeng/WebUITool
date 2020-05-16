@@ -1382,12 +1382,50 @@ class MainInit(QMainWindow):
             pickle.dump(test_case,open(path[0],"wb"))
             self.list_text_clear()
     def package_excute_method(self):
+        def replace_data(i):
+            if self.data_value_list[i].text().endswith(".web"):
+                self.data_value_list[i].setText(
+                    self.global_para[int(self.data_value_list[i].text().split(".")[0])])
+        def replace_data_two(i):
+            replace_data(i)
+            if self.data_value_two_list[i].text().endswith(".web"):
+                self.data_value_two_list[i].setText(
+                    self.global_para[int(self.data_value_two_list[i].text().split(".")[0])])
+        def replace_data_three(i):
+            replace_data_two(i)
+            if self.data_value_three_list[i].text().endswith(".web"):
+                self.data_value_three_list[i].setText(
+                    self.global_para[int(self.data_value_three_list[i].text().split(".")[0])])
+        def para_passing(i):#判断是否有参数传递
+            if back_data:  # 判断是否有返回值
+                self.data_output_value_list[i].setText(back_data)
+                if self.data_transfer_list[i].text():
+                    if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
+                        num = int(eval(self.data_transfer_list[i].text())[0]) - 1
+                        if int(eval(self.data_transfer_list[i].text())[1]) == 1:
+                            self.data_value_list[num].setText(back_data)
+                        if int(eval(self.data_transfer_list[i].text())[1]) == 2:
+                            self.data_value_two_list[num].setText(back_data)
+                        if int(eval(self.data_transfer_list[i].text())[1]) == 3:
+                            self.data_value_three_list[num].setText(back_data)
+                        index = eval(self.data_transfer_list[i].text())[2]
+                        self.global_para[index] = back_data
+                    if len(eval(self.data_transfer_list[i].text())) == 1:
+                        index = eval(self.data_transfer_list[i].text())[0]
+                        self.global_para[index] = back_data
+                    if len(eval(self.data_transfer_list[i].text())) == 2:
+                        num = int(eval(self.data_transfer_list[i].text())[0]) - 1
+                        if int(eval(self.data_transfer_list[i].text())[1]) == 1:
+                            self.data_value_list[num].setText(back_data)
+                        if int(eval(self.data_transfer_list[i].text())[1]) == 2:
+                            self.data_value_two_list[num].setText(back_data)
+                        if int(eval(self.data_transfer_list[i].text())[1]) == 3:
+                            self.data_value_three_list[num].setText(back_data)
         with open(os.path.join(os.path.dirname(__file__), "SERVICEIP.ini"), "r") as f:
             ip_text = f.read()
         self.driver_true.get(ip_text + self.url_line_edit.text())
         self.driver_true.maximize_window()
         self.excute_script = BasePage(self.driver_true, self.title_line_edit.text() + ".log")
-        # self.excute_script.logger.info("\n")
         self.excute_script.logger.info("{}_用例开始执行".format(self.title_line_edit.text()))
         self.true_dict = self.excute_script.back_method_dict()
         for i in range(0, len(self.step_combox_list)):
@@ -1396,35 +1434,8 @@ class MainInit(QMainWindow):
                 if para_num > 1:  # 有参数
                     if para_num == 2:
                         if self.step_combox_list[i].currentText() == "get":
-                            if self.data_value_list[i].text().endswith(".web"):
-                                index = int(self.data_value_list[i].text().split(".")[0])
-                                back_data = self.true_dict[self.step_combox_list[i].currentText()](ip_text + self.global_para[index])
-                            else:
-                                back_data = self.true_dict[self.step_combox_list[i].currentText()](ip_text + self.data_value_list[i].text())
-                            if back_data:  # 判断是否有返回值
-                                self.data_output_value_list[i].setText(back_data)
-                                if self.data_transfer_list[i].text():
-                                    if len(eval(self.data_transfer_list[i].text()))==3:  # 判断是否有参数传递
-                                        num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                            self.data_value_list[num].setText(back_data)
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                            self.data_value_two_list[num].setText(back_data)
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                            self.data_value_three_list[num].setText(back_data)
-                                        index = eval(self.data_transfer_list[i].text())[2]
-                                        self.global_para[index] = back_data
-                                    if len(eval(self.data_transfer_list[i].text()))==1:
-                                        index = eval(self.data_transfer_list[i].text())[0]
-                                        self.global_para[index] = back_data
-                                    if len(eval(self.data_transfer_list[i].text()))==2:
-                                        num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                            self.data_value_list[num].setText(back_data)
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                            self.data_value_two_list[num].setText(back_data)
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                            self.data_value_three_list[num].setText(back_data)
+                            back_data = self.true_dict[self.step_combox_list[i].currentText()](ip_text + self.data_value_list[i].text())
+                            para_passing(i)
                         else:
                             if  self.data_value_list[i].text().endswith(".web"):
                                 index =  int(self.data_value_list[i].text().split(".")[0])
@@ -1432,128 +1443,26 @@ class MainInit(QMainWindow):
                             else:
                                 back_data = self.true_dict[self.step_combox_list[i].currentText()](
                                     self.data_value_list[i].text())
-                            if back_data:  # 判断是否有返回值
-                                self.data_output_value_list[i].setText(back_data)
-                                if self.data_transfer_list[i].text():
-                                    if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
-                                        num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                            self.data_value_list[num].setText(back_data)
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                            self.data_value_two_list[num].setText(back_data)
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                            self.data_value_three_list[num].setText(back_data)
-                                        index = eval(self.data_transfer_list[i].text())[2]
-                                        self.global_para[index] = back_data
-                                    if len(eval(self.data_transfer_list[i].text())) == 1:
-                                        index = eval(self.data_transfer_list[i].text())[0]
-                                        self.global_para[index] = back_data
-                                    if len(eval(self.data_transfer_list[i].text())) == 2:
-                                        num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                            self.data_value_list[num].setText(back_data)
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                            self.data_value_two_list[num].setText(back_data)
-                                        if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                            self.data_value_three_list[num].setText(back_data)
+                            para_passing(i)
                     if para_num == 3:
-                        if  self.data_value_list[i].text().endswith(".web"):
-                            self.data_value_list[i].setText(self.global_para[int(self.data_value_list[i].text().split(".")[0])])
-                        if self.data_value_two_list[i].text().endswith(".web"):
-                            self.data_value_two_list[i].setText(self.global_para[int(self.data_value_two_list[i].text().split(".")[0])])
-
+                        replace_data_two(i)
                         back_data = self.true_dict[self.step_combox_list[i].currentText()](self.data_value_list[i].text(),
                                                                                            self.data_value_two_list[
                                                                                                i].text())
-                        if back_data:  # 判断是否有返回值
-                            self.data_output_value_list[i].setText(back_data)
-                            if self.data_transfer_list[i].text():
-                                if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
-                                    num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                        self.data_value_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                        self.data_value_two_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                        self.data_value_three_list[num].setText(back_data)
-                                    index = eval(self.data_transfer_list[i].text())[2]
-                                    self.global_para[index] = back_data
-                                if len(eval(self.data_transfer_list[i].text())) == 1:
-                                    index = eval(self.data_transfer_list[i].text())[0]
-                                    self.global_para[index] = back_data
-                                if len(eval(self.data_transfer_list[i].text())) == 2:
-                                    num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                        self.data_value_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                        self.data_value_two_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                        self.data_value_three_list[num].setText(back_data)
+                        para_passing(i)
                     if para_num == 4:
-                        if self.data_value_list[i].text().endswith(".web"):
-                            self.data_value_list[i].setText(
-                                self.global_para[int(self.data_value_list[i].text().split(".")[0])])
-                        if self.data_value_two_list[i].text().endswith(".web"):
-                            self.data_value_two_list[i].setText(
-                                self.global_para[int(self.data_value_two_list[i].text().split(".")[0])])
-                        if self.data_value_three_list[i].text().endswith(".web"):
-                            self.data_value_three_list[i].setText(
-                                self.global_para[int(self.data_value_three_list[i].text().split(".")[0])])
+                        replace_data_three(i)
                         back_data = self.true_dict[self.step_combox_list[i].currentText()](self.data_value_list[i].text(),
                                                                                            self.data_value_two_list[
                                                                                                i].text(),
                                                                                            self.data_value_three_list[
                                                                                                i].text())
-                        if back_data:  # 判断是否有返回值
-                            self.data_output_value_list[i].setText(back_data)
-                            if self.data_transfer_list[i].text():
-                                if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
-                                    num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                        self.data_value_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                        self.data_value_two_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                        self.data_value_three_list[num].setText(back_data)
-                                    index = eval(self.data_transfer_list[i].text())[2]
-                                    self.global_para[index] = back_data
-                                if len(eval(self.data_transfer_list[i].text())) == 1:
-                                    index = eval(self.data_transfer_list[i].text())[0]
-                                    self.global_para[index] = back_data
-                                if len(eval(self.data_transfer_list[i].text())) == 2:
-                                    num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                        self.data_value_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                        self.data_value_two_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                        self.data_value_three_list[num].setText(back_data)
+                        para_passing(i)
                 else:  # 无参数
                     back_data = self.true_dict[self.step_combox_list[i].currentText()]()
                     if back_data:  # 判断是否有返回值
                         self.data_output_value_list[i].setText(back_data)
-                        if self.data_transfer_list[i].text():
-                            if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
-                                num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                    self.data_value_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                    self.data_value_two_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                    self.data_value_three_list[num].setText(back_data)
-                                index = eval(self.data_transfer_list[i].text())[2]
-                                self.global_para[index] = back_data
-                            if len(eval(self.data_transfer_list[i].text())) == 1:
-                                index = eval(self.data_transfer_list[i].text())[0]
-                                self.global_para[index] = back_data
-                            if len(eval(self.data_transfer_list[i].text())) == 2:
-                                num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                    self.data_value_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                    self.data_value_two_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                    self.data_value_three_list[num].setText(back_data)
+                        para_num(i)
             else:  # 为浏览器存在元素定位操作
                 para_num = len(inspect.getfullargspec(self.true_dict[self.step_combox_list[i].currentText()]).args)
                 locator_name = self.cf.back_locator_tuple(self.page_combox_list[i].currentText(),
@@ -1574,139 +1483,31 @@ class MainInit(QMainWindow):
                                 read_list = read_text.split(";")
                             self.true_dict[self.step_combox_list[i].currentText()](locator_name, read_list[1])
                             continue
-                        if self.data_value_list[i].text().endswith(".web"):
-                            self.data_value_list[i].setText(
-                                self.global_para[int(self.data_value_list[i].text().split(".")[0])])
+                        replace_data(i)
                         back_data = self.true_dict[self.step_combox_list[i].currentText()](locator_name,
                                                                                            self.data_value_list[i].text())
-                        if back_data:  # 判断是否有返回值
-                            self.data_output_value_list[i].setText(back_data)
-                            if self.data_transfer_list[i].text():
-                                if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
-                                    num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                        self.data_value_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                        self.data_value_two_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                        self.data_value_three_list[num].setText(back_data)
-                                    index = eval(self.data_transfer_list[i].text())[2]
-                                    self.global_para[index] = back_data
-                                if len(eval(self.data_transfer_list[i].text())) == 1:
-                                    index = eval(self.data_transfer_list[i].text())[0]
-                                    self.global_para[index] = back_data
-                                if len(eval(self.data_transfer_list[i].text())) == 2:
-                                    num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                        self.data_value_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                        self.data_value_two_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                        self.data_value_three_list[num].setText(back_data)
+                        para_passing(i)
                     if para_num == 4:
-                        if self.data_value_list[i].text().endswith(".web"):
-                            self.data_value_list[i].setText(
-                                self.global_para[int(self.data_value_list[i].text().split(".")[0])])
-                        if self.data_value_two_list[i].text().endswith(".web"):
-                            self.data_value_two_list[i].setText(
-                                self.global_para[int(self.data_value_two_list[i].text().split(".")[0])])
+                        replace_data_two(i)
                         back_data = self.true_dict[self.step_combox_list[i].currentText()](locator_name,
                                                                                            self.data_value_list[i].text(),
                                                                                            self.data_value_two_list[
                                                                                                i].text())
-                        if back_data:  # 判断是否有返回值
-                            self.data_output_value_list[i].setText(back_data)
-                            if self.data_transfer_list[i].text():
-                                if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
-                                    num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                        self.data_value_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                        self.data_value_two_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                        self.data_value_three_list[num].setText(back_data)
-                                    index = eval(self.data_transfer_list[i].text())[2]
-                                    self.global_para[index] = back_data
-                                if len(eval(self.data_transfer_list[i].text())) == 1:
-                                    index = eval(self.data_transfer_list[i].text())[0]
-                                    self.global_para[index] = back_data
-                                if len(eval(self.data_transfer_list[i].text())) == 2:
-                                    num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                        self.data_value_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                        self.data_value_two_list[num].setText(back_data)
-                                    if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                        self.data_value_three_list[num].setText(back_data)
+                        para_passing(i)
                     if para_num == 5:
-                        if self.data_value_list[i].text().endswith(".web"):
-                            self.data_value_list[i].setText(
-                                self.global_para[int(self.data_value_list[i].text().split(".")[0])])
-                        if self.data_value_two_list[i].text().endswith(".web"):
-                            self.data_value_two_list[i].setText(
-                                self.global_para[int(self.data_value_two_list[i].text().split(".")[0])])
-                        if self.data_value_three_list[i].text().endswith(".web"):
-                            self.data_value_three_list[i].setText(
-                                self.global_para[int(self.data_value_three_list[i].text().split(".")[0])])
+                        replace_data_three(i)
                         back_data = self.true_dict[self.step_combox_list[i].currentText()](locator_name,
                                                                                            self.data_value_list[i].text(),
                                                                                            self.data_value_two_list[
                                                                                                i].text(),
                                                                                            self.data_value_three_list[
                                                                                                i].text())
-                        if back_data:  # 判断是否有返回值
-                            self.data_output_value_list[i].setText(back_data)
-                            if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
-                                num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                    self.data_value_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                    self.data_value_two_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                    self.data_value_three_list[num].setText(back_data)
-                                index = eval(self.data_transfer_list[i].text())[2]
-                                self.global_para[index] = back_data
-                            if len(eval(self.data_transfer_list[i].text())) == 1:
-                                index = eval(self.data_transfer_list[i].text())[0]
-                                self.global_para[index] = back_data
-                            if len(eval(self.data_transfer_list[i].text())) == 2:
-                                num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                    self.data_value_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                    self.data_value_two_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                    self.data_value_three_list[num].setText(back_data)
+                        para_passing(i)
                 else:  # 无参数
                     back_data = self.true_dict[self.step_combox_list[i].currentText()](locator_name)
-                    if back_data:  # 判断是否有返回值
-                        self.data_output_value_list[i].setText(back_data)
-                        if self.data_transfer_list[i].text():
-                            if len(eval(self.data_transfer_list[i].text())) == 3:  # 判断是否有参数传递
-                                num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                    self.data_value_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                    self.data_value_two_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                    self.data_value_three_list[num].setText(back_data)
-                                index = eval(self.data_transfer_list[i].text())[2]
-                                self.global_para[index] = back_data
-                            if len(eval(self.data_transfer_list[i].text())) == 1:
-                                index = eval(self.data_transfer_list[i].text())[0]
-                                self.global_para[index] = back_data
-                            if len(eval(self.data_transfer_list[i].text())) == 2:
-                                num = int(eval(self.data_transfer_list[i].text())[0]) - 1
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 1:
-                                    self.data_value_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 2:
-                                    self.data_value_two_list[num].setText(back_data)
-                                if int(eval(self.data_transfer_list[i].text())[1]) == 3:
-                                    self.data_value_three_list[num].setText(back_data)
+                    para_passing(i)
         if self.exp_line_edit.text().endswith(".web"):
             self.exp_line_edit.setText(self.global_para[int(self.exp_line_edit.text().split(".")[0])])
-        png_name = os.path.join(os.path.dirname(__file__),"test_screenshot_png",self.title_line_edit.text()+".png")
-        self.true_dict["test_screenshot_png"](png_name)
     def package_excute_all_method(self,test_case):
         try:
             with open(os.path.join(os.path.dirname(__file__), "SERVICEIP.ini"), "r") as f:
@@ -2055,9 +1856,6 @@ class MainInit(QMainWindow):
             if self.default_teardown_value == "每个用例执行完关闭浏览器":
                 self.driver_true.quit()
         except :
-            png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png",
-                                    self.title_line_edit.text() + ".png")
-            self.true_dict["test_screenshot_png"](png_name)
             self.driver_true.quit()
             self.result_label.setText(self.result_error)
             self.excute_script.logger.error("用例执行异常，请检查脚本\n")
