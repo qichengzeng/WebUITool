@@ -18,7 +18,8 @@ from email.header import Header
 from openpyxl import Workbook
 from openpyxl import load_workbook
 import shutil
-from testHtmlReport import TestHtmlReport
+from testHtmlReport import TestHtmlReport,global_null_list,minute_list,hour_list,day_list
+
 def send_test_report(email_service,username,password,receves,filename):
     sender = username
     receivers = receves  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
@@ -139,7 +140,7 @@ class MainInit(QMainWindow):
         self.line_edit_width = int(QApplication.desktop().width()/4)
         self.table_width = int(QApplication.desktop().width()*2/5)
         self.table_row_height = int(QApplication.desktop().height()*2/3)
-        self.global_para =["","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""]
+        self.global_para = global_null_list
         self.line_edit_height = 25
         self.btn_width = 75
         self.btn_height = 25
@@ -389,17 +390,14 @@ class MainInit(QMainWindow):
         self.week_radio.pressed.connect(self.week_radio_method)
         self.none_radio.pressed.connect(self.none_radio_method)
         self.hour_combox = QComboBox(self)
-        self.hour_combox.addItems(["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30",
-                                  "31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","0"])
+        self.hour_combox.addItems(minute_list)
         self.day_combox = QComboBox(self)
         self.day_combox.resize(70,25)
         self.week_combox = QComboBox(self)
         self.week_combox.resize(70,25)
         self.hour_combox.resize(70,25)
-        self.day_combox.addItems(
-            ["1点", "2点", "3点", "4点", "5点", "6点", "7点", "8点", "9点", "10点", "11点", "12点", "13点", "14点", "15点", "16点", "17点", "18点", "19点",
-             "20点", "21点", "22点", "23点", "0点"])
-        self.week_combox.addItems(["周1", "周2", "周3", "周4", "周5", "周6", "周0"])
+        self.day_combox.addItems(hour_list)
+        self.week_combox.addItems(day_list)
         self.timer = MyQTimer(self)
         self.timer.timeout.connect(self.timer_excute_method)
         self.timer.timeout.connect(self.fail_and_error_reexcute)#超时执行失败和错误的测试用例
@@ -583,6 +581,187 @@ class MainInit(QMainWindow):
                 self.week_combox.setVisible(True)
         else:
             QMessageBox.information(self,"提示","没有定时任务被执行",QMessageBox.Yes)
+
+    def inset_and_delete_action(self, pos):
+        index = self.data_output_value_list.index(self.sender())
+        position = index + 1
+        menu = QMenu()
+        insert_action = menu.addAction("插入一行")
+        delete_action = menu.addAction('删除这行')
+        action = menu.exec_(self.data_output_value_list[index].mapToGlobal(pos))
+        if action == insert_action:
+            self.steps_table.insertRow(position)
+            self.data_table.insertRow(position)
+            self.steps_table_row = self.steps_table_row + 1
+            # self.steps_table.setRowCount(self.steps_table_row)
+            self.table_row = self.table_row + 1
+            # self.data_table.setRowCount(self.table_row)
+            self.data_name_list.insert(position, QLineEdit(str(position + 1)))
+            for i in range(position + 1, len(self.data_name_list)):
+                self.data_name_list[i].setText(str(i + 1))
+            self.data_name_list[position].setAlignment(Qt.AlignCenter)
+            self.data_name_list[position].setReadOnly(True)
+            self.data_value_list.insert(position, self.create_Qlineedit_object())
+            self.data_value_list[position].setAlignment(Qt.AlignCenter)
+            self.data_value_list[position].editingFinished.connect(self.data_value_list_method)
+            self.data_value_two_list.insert(position, self.create_Qlineedit_object())
+            self.data_value_two_list[position].setAlignment(Qt.AlignCenter)
+            self.data_value_two_list[position].setReadOnly(True)
+            self.data_value_two_list[position].editingFinished.connect(self.data_value_two_list_method)
+            self.data_value_three_list.insert(position, self.create_Qlineedit_object())
+            self.data_value_three_list[position].setAlignment(Qt.AlignCenter)
+            self.data_value_three_list[position].setReadOnly(True)
+            self.data_output_value_list.insert(position, self.create_Qlineedit_object())
+            self.data_output_value_list[position].setReadOnly(True)
+            self.data_transfer_list.insert(position, QLineEdit())
+            self.data_transfer_list[position].setAlignment(Qt.AlignCenter)
+            self.data_output_value_list[position].setAlignment(Qt.AlignCenter)
+            self.data_output_value_list[position].setContextMenuPolicy(Qt.CustomContextMenu)
+            self.data_output_value_list[position].customContextMenuRequested.connect(self.inset_and_delete_action)
+
+            self.step_combox_list.insert(position, self.create_Qcombox_object())
+            self.step_combox_list[position].addItems(list(self.driver_false.back_method_dict().keys()))
+            self.page_combox_list.insert(position, self.create_Qcombox_object())
+            self.page_combox_list[position].addItems(self.sections_list)
+            self.page_combox_list[position].currentIndexChanged.connect(self.page_combox_list_method)
+            self.locator_name_combox_list.insert(position, self.create_Qcombox_object())
+            self.locator_name_combox_list[position].addItems(self.options_dict.get(self.sections_list[0]))
+
+            self.data_table.setCellWidget(position, 0, self.data_name_list[position])
+            self.data_table.setCellWidget(position, 1, self.data_value_list[position])
+            self.data_table.setCellWidget(position, 2, self.data_value_two_list[position])
+            self.data_table.setCellWidget(position, 3, self.data_value_three_list[position])
+            self.data_table.setCellWidget(position, 4, self.data_output_value_list[position])
+            self.data_table.setCellWidget(position, 5, self.data_transfer_list[position])
+
+            self.steps_table.setCellWidget(position, 0, self.step_combox_list[position])
+            self.steps_table.setCellWidget(position, 1, self.page_combox_list[position])
+            self.steps_table.setCellWidget(position, 2, self.locator_name_combox_list[position])
+        if action == delete_action:
+            self.steps_table_row = self.steps_table_row - 1
+            self.table_row = self.table_row - 1
+
+            self.step_combox_list.pop(index)
+            self.page_combox_list.pop(index)
+            self.locator_name_combox_list.pop(index)
+
+            self.data_name_list.pop(index)
+            for i in range(index, len(self.data_name_list)):
+                self.data_name_list[i].setText(str(i + 1))
+            self.data_value_list.pop(index)
+            self.data_value_two_list.pop(index)
+            self.data_value_three_list.pop(index)
+            self.data_output_value_list.pop(index)
+            self.data_transfer_list.pop(index)
+            self.steps_table.removeRow(index)
+            self.data_table.removeRow(index)
+
+    def list_clear(self):
+        self.data_name_list.clear()
+        self.data_value_list.clear()
+        self.data_value_two_list.clear()
+        self.data_value_three_list.clear()
+        self.data_output_value_list.clear()
+        self.data_transfer_list.clear()
+        self.step_combox_list.clear()
+        self.page_combox_list.clear()
+        self.locator_name_combox_list.clear()
+
+    def list_text_clear(self):
+        self.data_name_text_list.clear()
+        self.data_value_text_list.clear()
+        self.data_value_two_text_list.clear()
+        self.data_value_three_text_list.clear()
+        self.data_transfer_text_list.clear()
+        self.step_combox_text_list.clear()
+        self.page_combox_text_list.clear()
+        self.locator_name_combox_text_list.clear()
+
+    def send_email(self):
+        if self.email_status:
+            conf = ConfigParser()
+            try:
+                conf.read(filenames="EMAIL.ini")
+            except:
+                QMessageBox.information(self, '提示', "EMAIL.ini配置文件不存在，邮箱发送失败！！！", QMessageBox.Yes)
+                return None
+            receve_list = []
+            file_name = os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html")
+            try:
+                if conf.get("receve", "receve_user_one"):
+                    receve_list.append(conf.get("receve", "receve_user_one"))
+                if conf.get("receve", "receve_user_two"):
+                    receve_list.append(conf.get("receve", "receve_user_two"))
+                if conf.get("receve", "receve_user_three"):
+                    receve_list.append(conf.get("receve", "receve_user_three"))
+            except:
+                QMessageBox.information(self, '提示', "系统默认配置被更改，获取收件人信息失败！！！", QMessageBox.Yes)
+                return None
+            try:
+                send_test_report(conf.get("send", "email_service"), conf.get("send", "user_name"), conf.get("send", "password"),
+                                 receve_list, file_name)
+                QMessageBox.information(self, '提示', "邮箱发成功！！！", QMessageBox.Yes)
+            except:
+                QMessageBox.information(self, '提示', "邮箱发送失败！！！", QMessageBox.Yes)
+                return None
+
+    def init_excute_all_data(self,path):
+        self.result_success_num = 0
+        self.result_fail_num = 0
+        self.result_error_num = 0
+        self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
+        self.start_time = time.time()
+        self.all_test_case = 0
+        for object_path, dirs, files in os.walk(path):
+            for file in files:
+                if file.endswith(".web"):
+                    self.all_test_case = self.all_test_case + 1
+        self.progressBar.setMaximum(self.all_test_case)
+        self.del_file(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
+
+    def traverse_all_file(self,excute_all_path):
+        index = 0
+        for object_path, dirs, files in os.walk(excute_all_path):
+            object_path = object_path
+            self.basename = os.path.basename(object_path)
+            for file in files:
+                if file.endswith(".web"):
+                    excute_path = os.path.join(object_path, file)
+                    test_case = pickle.load(open(excute_path, "rb"))
+                    index = index + 1
+                    QApplication.processEvents()
+                    self.statu.showMessage("共发现" + str(self.all_test_case) + "个测试数据文件" + "[正在执行测试用例：" + test_case.title + "]")
+                    self.progressBar.setValue(index)
+                    self.single_excute_action_method_two(test_case,excute_path,1)
+
+    def write_report_ES(self):#写测试报告的开头和结尾
+        all_num = self.result_success_num + self.result_fail_num + self.result_error_num
+        persent_pass = "%.2f%%" % (self.result_success_num / all_num * 100)
+        all_time = self.end_time - self.start_time
+        test_desc = "共{},通过{},失败{},错误{},通过率={}".format(all_num,self.result_success_num,self.result_fail_num,self.result_error_num, persent_pass)
+        try:
+            with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"r") as f:
+                text = f.read()
+        except:
+            QMessageBox.information(self, '提示', "读取测试报告体数据失败", QMessageBox.Yes)
+            text = "读取日志信息失败了,可以去test_case_log查看"
+        try:
+            with open(os.path.join(os.path.dirname(__file__), "SERVICEIP.ini"), "r") as f:
+                ip_name = f.read()
+        except:
+            QMessageBox.information(self, '提示', "读取测试域名信息失败", QMessageBox.Yes)
+            ip_name = "https://github.com/qichengzeng/WebUITool"
+        try:
+            with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"w", encoding="utf-8") as f1:
+                f1.write(TestHtmlReport.HTMLHEAD.format(TestHtmlReport.HTMLSCRIPt,self.driver_name,ip_name,self.excute_time,all_time,test_desc,
+                                                        self.result_success_num,self.result_fail_num, self.result_error_num))
+            with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+", encoding="utf-8") as f:
+                f.write(text)
+                f.write(TestHtmlReport.HTMLEND)
+        except:
+            QMessageBox.information(self, '提示', "测试报告生成失败", QMessageBox.Yes)
+
+
     def all_excute_action_four(self):#用例失败重跑几次
         rerun_num = int(self.fail_rerun_combox.currentText())
         self.excute_all_status = 1
@@ -669,282 +848,29 @@ class MainInit(QMainWindow):
                                 self.steps_table.setCellWidget(i, 1, self.page_combox_list[i])
                                 self.steps_table.setCellWidget(i, 2, self.locator_name_combox_list[i])
 
-                            self.single_excute_action_method_three()
+                            self.single_excute_action_method_three(test_case,excute_path,0)
                 self.end_time = time.time()
-                try:
-                    with open(
-                            os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                            "r") as f:
-                        text = f.read()
-                    with open(
-                            os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                            "w", encoding="utf-8") as f1:
-                        all_num = self.result_success_num + self.result_fail_num + self.result_error_num
-                        persent_pass = "%.2f%%" % (self.result_success_num / all_num * 100)
-                        with open(os.path.join(os.path.dirname(__file__), "SERVICEIP.ini"), "r") as f:
-                            ip_name = f.read()
-                        f1.write(TestHtmlReport.HTMLHEAD.format(TestHtmlReport.HTMLSCRIPt, self.driver_name, ip_name,
-                                                                self.excute_time, self.end_time - self.start_time,
-                                                                "共{},通过{},失败{},错误{},通过率={}".
-                                                                format(all_num, self.result_success_num,
-                                                                       self.result_fail_num, self.result_error_num,
-                                                                       persent_pass), self.result_success_num,
-                                                                self.result_fail_num, self.result_error_num))
-                    with open(
-                            os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                            "a+", encoding="utf-8") as f:
-                        f.write(text)
-                        f.write(TestHtmlReport.HTMLEND)
-                    if self.email_status:
-                        conf = ConfigParser()
-                        conf.read(filenames="EMAIL.ini")
-                        receve_list = []
-                        file_name = os.path.join(os.path.dirname(__file__), "test_case_report",
-                                                 self.excute_time + "_report.html")
-                        if conf.get("receve", "receve_user_one"):
-                            receve_list.append(conf.get("receve", "receve_user_one"))
-                        if conf.get("receve", "receve_user_two"):
-                            receve_list.append(conf.get("receve", "receve_user_two"))
-                        if conf.get("receve", "receve_user_three"):
-                            receve_list.append(conf.get("receve", "receve_user_three"))
-                        send_test_report(conf.get("send", "email_service"), conf.get("send", "user_name"),
-                                         conf.get("send", "password"), receve_list, file_name)
-                except  Exception:
-                    pass
+                self.write_report_ES()
+                self.send_email()
 
-    def all_excute_action_three(self,excute_path):#定时任务执行方法
-        self.result_success_num = 0
-        self.result_fail_num = 0
-        self.result_error_num = 0
-        self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
-        self.start_time = time.time()
-        self.all_test_case = 0
-        for object_path, dirs, files in os.walk(excute_path):
-            for file in files:
-                if file.endswith(".web"):
-                    self.all_test_case = self.all_test_case + 1
-        self.progressBar.setMaximum(self.all_test_case)
-        index = 0
-        self.del_file(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
-        for object_path, dirs, files in os.walk(excute_path):
-            object_path = object_path
-            self.basename = os.path.basename(object_path)
-            for file in files:
-                if file.endswith(".web"):
-                    excute_path = os.path.join(object_path, file)
-                    test_case = pickle.load(open(excute_path, "rb"))
-                    index = index + 1
-                    QApplication.processEvents()
-                    self.statu.showMessage("共发现" + str(self.all_test_case) + "个测试数据文件" + "[正在执行测试用例：" + test_case.title + "]")
-                    self.progressBar.setValue(index)
-                    self.single_excute_action_method_two(test_case,excute_path)
+    def all_excute_action_three(self,excute_all_path): # 定时任务执行方法
+        self.init_excute_all_data(excute_all_path)
+        self.traverse_all_file(excute_all_path)
         self.end_time = time.time()
         self.excute_all_status = 0
-        try:
-            with open(
-                    os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                    "r") as f:
-                text = f.read()
-            with open(
-                    os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                    "w", encoding="utf-8") as f1:
-                all_num = self.result_success_num + self.result_fail_num + self.result_error_num
-                persent_pass = "%.2f%%" % (self.result_success_num / all_num * 100)
-                with open(os.path.join(os.path.dirname(__file__), "SERVICEIP.ini"), "r") as f:
-                    ip_name = f.read()
-                f1.write(TestHtmlReport.HTMLHEAD.format(TestHtmlReport.HTMLSCRIPt, self.driver_name, ip_name,
-                                                        self.excute_time, self.end_time - self.start_time,
-                                                        "共{},通过{},失败{},错误{},通过率={}".
-                                                        format(all_num, self.result_success_num,
-                                                               self.result_fail_num, self.result_error_num,
-                                                               persent_pass), self.result_success_num,
-                                                        self.result_fail_num, self.result_error_num))
-            with open(
-                    os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                    "a+", encoding="utf-8") as f:
-                f.write(text)
-                f.write(TestHtmlReport.HTMLEND)
-            if self.email_status:
-                conf = ConfigParser()
-                conf.read(filenames="EMAIL.ini")
-                receve_list = []
-                file_name = os.path.join(os.path.dirname(__file__), "test_case_report",
-                                         self.excute_time + "_report.html")
-                if conf.get("receve", "receve_user_one"):
-                    receve_list.append(conf.get("receve", "receve_user_one"))
-                if conf.get("receve", "receve_user_two"):
-                    receve_list.append(conf.get("receve", "receve_user_two"))
-                if conf.get("receve", "receve_user_three"):
-                    receve_list.append(conf.get("receve", "receve_user_three"))
-                send_test_report(conf.get("send", "email_service"), conf.get("send", "user_name"),
-                                 conf.get("send", "password"), receve_list, file_name)
-        except  Exception:
-             pass
-    def inset_and_delete_action(self,pos):
-        index = self.data_output_value_list.index(self.sender())
-        position = index + 1
-        menu = QMenu()
-        insert_action = menu.addAction("插入一行")
-        delete_action = menu.addAction('删除这行')
-        action = menu.exec_(self.data_output_value_list[index].mapToGlobal(pos))
-        if action == insert_action:
-            self.steps_table.insertRow(position)
-            self.data_table.insertRow(position)
-            self.steps_table_row = self.steps_table_row + 1
-            # self.steps_table.setRowCount(self.steps_table_row)
-            self.table_row = self.table_row + 1
-            # self.data_table.setRowCount(self.table_row)
-            self.data_name_list.insert(position,QLineEdit(str(position+1)))
-            for i in range(position+1,len(self.data_name_list)):
-                self.data_name_list[i].setText(str(i+1))
-            self.data_name_list[position].setAlignment(Qt.AlignCenter)
-            self.data_name_list[position].setReadOnly(True)
-            self.data_value_list.insert(position,self.create_Qlineedit_object())
-            self.data_value_list[position].setAlignment(Qt.AlignCenter)
-            self.data_value_list[position].editingFinished.connect(self.data_value_list_method)
-            self.data_value_two_list.insert(position,self.create_Qlineedit_object())
-            self.data_value_two_list[position].setAlignment(Qt.AlignCenter)
-            self.data_value_two_list[position].setReadOnly(True)
-            self.data_value_two_list[position].editingFinished.connect(self.data_value_two_list_method)
-            self.data_value_three_list.insert(position,self.create_Qlineedit_object())
-            self.data_value_three_list[position].setAlignment(Qt.AlignCenter)
-            self.data_value_three_list[position].setReadOnly(True)
-            self.data_output_value_list.insert(position,self.create_Qlineedit_object())
-            self.data_output_value_list[position].setReadOnly(True)
-            self.data_transfer_list.insert(position,QLineEdit())
-            self.data_transfer_list[position].setAlignment(Qt.AlignCenter)
-            self.data_output_value_list[position].setAlignment(Qt.AlignCenter)
-            self.data_output_value_list[position].setContextMenuPolicy(Qt.CustomContextMenu)
-            self.data_output_value_list[position].customContextMenuRequested.connect(self.inset_and_delete_action)
+        self.write_report_ES()
+        self.send_email()
 
-            self.step_combox_list.insert(position,self.create_Qcombox_object())
-            self.step_combox_list[position].addItems(list(self.driver_false.back_method_dict().keys()))
-            self.page_combox_list.insert(position,self.create_Qcombox_object())
-            self.page_combox_list[position].addItems(self.sections_list)
-            self.page_combox_list[position].currentIndexChanged.connect(self.page_combox_list_method)
-            self.locator_name_combox_list.insert(position,self.create_Qcombox_object())
-            self.locator_name_combox_list[position].addItems(self.options_dict.get(self.sections_list[0]))
-
-            self.data_table.setCellWidget(position, 0, self.data_name_list[position])
-            self.data_table.setCellWidget(position, 1, self.data_value_list[position])
-            self.data_table.setCellWidget(position, 2, self.data_value_two_list[position])
-            self.data_table.setCellWidget(position, 3, self.data_value_three_list[position])
-            self.data_table.setCellWidget(position, 4, self.data_output_value_list[position])
-            self.data_table.setCellWidget(position, 5, self.data_transfer_list[position])
-
-            self.steps_table.setCellWidget(position, 0, self.step_combox_list[position])
-            self.steps_table.setCellWidget(position, 1, self.page_combox_list[position])
-            self.steps_table.setCellWidget(position, 2, self.locator_name_combox_list[position])
-        if action==delete_action:
-            self.steps_table_row = self.steps_table_row - 1
-            self.table_row = self.table_row - 1
-
-            self.step_combox_list.pop(index)
-            self.page_combox_list.pop(index)
-            self.locator_name_combox_list.pop(index)
-
-            self.data_name_list.pop(index)
-            for i in range(index, len(self.data_name_list)):
-                self.data_name_list[i].setText(str(i + 1))
-            self.data_value_list.pop(index)
-            self.data_value_two_list.pop(index)
-            self.data_value_three_list.pop(index)
-            self.data_output_value_list.pop(index)
-            self.data_transfer_list.pop(index)
-            self.steps_table.removeRow(index)
-            self.data_table.removeRow(index)
-            # self.steps_table.setRowCount(self.steps_table_row)
-            # self.data_table.setRowCount(self.table_row)
-        # if action == global_one_action:
-        #     self.sender().setText("haha")
-        # if action == global_two_action:
-        #     pass
-        # if action == global_three_action:
-        #     pass
-    def list_clear(self):
-        self.data_name_list.clear()
-        self.data_value_list.clear()
-        self.data_value_two_list.clear()
-        self.data_value_three_list.clear()
-        self.data_output_value_list.clear()
-        self.data_transfer_list.clear()
-        self.step_combox_list.clear()
-        self.page_combox_list.clear()
-        self.locator_name_combox_list.clear()
-    def list_text_clear(self):
-        self.data_name_text_list.clear()
-        self.data_value_text_list.clear()
-        self.data_value_two_text_list.clear()
-        self.data_value_three_text_list.clear()
-        self.data_transfer_text_list.clear()
-        self.step_combox_text_list.clear()
-        self.page_combox_text_list.clear()
-        self.locator_name_combox_text_list.clear()
-    def all_excute_action_method(self):
-        self.result_success_num = 0
-        self.result_fail_num = 0
-        self.result_error_num = 0
-        self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
-        self.start_time = time.time()
+    def all_excute_action_method(self): # 执行所有测试用例
         base_dir = os.path.join(os.path.dirname(__file__),"test_case_object")
-        if os.path.exists(base_dir):
-            path = QFileDialog.getExistingDirectory(self, "请选择执行目录", base_dir)
-        else:
-            os.mkdir(base_dir)
-            path = QFileDialog.getExistingDirectory(self,"请选择执行目录",base_dir)
+        path = QFileDialog.getExistingDirectory(self,"请选择执行目录",base_dir)
         if path:
-            self.all_test_case = 0
-            for object_path,dirs,files in os.walk(path):
-                for file in files:
-                    if file.endswith(".web"):
-                        self.all_test_case = self.all_test_case + 1
-            self.progressBar.setMaximum(self.all_test_case)
-            index = 0
-            self.del_file(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
-            for object_path,dirs,files in os.walk(path):
-                object_path = object_path
-                self.basename = os.path.basename(object_path)
-                for file in files:
-                    if file.endswith(".web"):
-                        global excute_path
-                        excute_path =os.path.join(object_path,file)
-                        test_case = pickle.load(open(excute_path,"rb"))
-                        index = index + 1
-                        QApplication.processEvents()
-                        self.statu.showMessage("共发现"+str(self.all_test_case)+"个测试数据文件"+"[正在执行测试用例："+test_case.title+"]")
-                        self.progressBar.setValue(index)
-                        self.single_excute_action_method_two(test_case,excute_path)
+            self.init_excute_all_data(path)
+            self.traverse_all_file(path)
             self.end_time = time.time()
-            self.excute_all_status = 0
-            try:
-                with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"r") as f:
-                                text = f.read()
-                with open(os.path.join(os.path.dirname(__file__), "test_case_report",self.excute_time + "_report.html"), "w",encoding="utf-8") as f1:
-                                all_num = self.result_success_num+self.result_fail_num+self.result_error_num
-                                persent_pass = "%.2f%%"%(self.result_success_num/all_num*100)
-                                with open(os.path.join(os.path.dirname(__file__),"SERVICEIP.ini"),"r") as f:
-                                     ip_name=f.read()
-                                f1.write(TestHtmlReport.HTMLHEAD.format(TestHtmlReport.HTMLSCRIPt,self.driver_name,ip_name,self.excute_time,self.end_time-self.start_time,"共{},通过{},失败{},错误{},通过率={}".
-                                                                       format(all_num,self.result_success_num,self.result_fail_num,self.result_error_num,persent_pass),self.result_success_num,
-                                                                              self.result_fail_num,self.result_error_num))
-                with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+",encoding="utf-8") as f:
-                                f.write(text)
-                                f.write(TestHtmlReport.HTMLEND)
-                if self.email_status:
-                    conf = ConfigParser()
-                    conf.read(filenames="EMAIL.ini")
-                    receve_list = []
-                    file_name =os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html")
-                    if  conf.get("receve", "receve_user_one"):
-                        receve_list.append(conf.get("receve", "receve_user_one"))
-                    if  conf.get("receve", "receve_user_two"):
-                        receve_list.append(conf.get("receve", "receve_user_two"))
-                    if  conf.get("receve", "receve_user_three"):
-                        receve_list.append(conf.get("receve", "receve_user_three"))
-                    send_test_report(conf.get("send","email_service"),conf.get("send","user_name"),conf.get("send","password"),receve_list,file_name)
-
-            except  Exception:
-                pass
+            self.excute_all_status = 0 # 等于0后会触发执行失败的测试用例
+            self.write_report_ES()
+            self.send_email()
 
     def add_step_btn_method(self):
         self.steps_table_row = self.steps_table_row + 1
@@ -1254,10 +1180,13 @@ class MainInit(QMainWindow):
         try:
             if self.chrome_radio.isChecked():
                 self.driver_true = webdriver.Chrome()
+                self.driver_name = "CHROME"
             if self.ie_radio.isChecked():
                 self.driver_true = webdriver.Ie()
+                self.driver_name = "IE"
             if self.firefox_radio.isChecked():
                 self.driver_true = webdriver.Firefox()
+                self.driver_name = "FIREFOx"
         except Exception as e:
             QMessageBox.information(self, "提示", "请在该程序目录下放置对应的浏览器驱动", QMessageBox.Ok)
             return None
@@ -1859,143 +1788,100 @@ class MainInit(QMainWindow):
             self.driver_true.quit()
             self.result_label.setText(self.result_error)
             self.excute_script.logger.error("用例执行异常，请检查脚本\n")
-    def single_excute_action_method_three(self):#用例失败后重跑成功删除该用例
-        self.init_driver()
-        start_time = time.time()
-        try:
-            self.package_excute_method()
-            self.act_line_edit.setText(self.data_output_value_list[-1].text())
-            if self.assert_method_combox.currentText() == "相等":
-                if self.act_line_edit.text() == self.exp_line_edit.text():
-                    self.result_label.setText(self.result_success)
-                    self.excute_script.logger.info("用例的执行情况是:" + self.result_success + "\n")
-                    self.result_success_num += 1
-                    os.remove(excute_path)
-                else:
-                    self.result_label.setText(self.result_fail)
-                    self.excute_script.logger.info("用例的执行情况是:" + self.result_fail + "\n")
-                    self.result_fail_num += 1
-                    # shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
-            if self.assert_method_combox.currentText() == "不相等":
-                if self.act_line_edit.text() != self.exp_line_edit.text():
-                    self.result_label.setText(self.result_success)
-                    self.excute_script.logger.info("用例的执行情况是:" + self.result_success + "\n")
-                    self.result_success_num += 1
-                    os.remove(excute_path)
-                else:
-                    self.result_label.setText(self.result_fail)
-                    self.excute_script.logger.info("用例的执行情况是:" + self.result_fail + "\n")
-                    self.result_fail_num += 1
-                    # shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
-            end_time = time.time()
-            if self.default_teardown_value == "每个用例执行完关闭浏览器":
-                self.driver_true.quit()
-            with open(os.path.join(os.path.dirname(__file__), "test_case_log", self.title_line_edit.text() + ".log"),
-                      "r", encoding="utf-8") as f:
-                log_text = f.read()
-            with open(
-                    os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                    "a+") as f:
+
+    def show_test_result(self):
+        self.excute_label.setText(
+            "成功_" + str(self.result_success_num) + "/" + "失败_" + str(self.result_fail_num) + "/" + "异常_" + str(
+                self.result_error_num) + "/" + str(self.all_test_case))
+
+    def copy_error_file(path):#excute_path
+        if self.result_label.text() == self.result_fail:
+            shutil.copy(path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
+
+    def remover_success_file(self, path):
+        if self.result_label.text() == self.result_success:
+            os.remove(path)
+    def calculate_test_result(self,assert_method,exp,act,path):
+        def add_test_result_log(exp,act):
+            self.excute_script.logger.info("用例的期望结果是:" + exp)
+            self.excute_script.logger.info("用例的实际结果是:" + act)
+
+        if assert_method == "相等":
+
+            if exp == act:
+                add_test_result_log(exp,act)
+                self.result_label.setText(self.result_success)
+                self.excute_script.logger.info("用例的执行情况是:" + self.result_success + "\n")
+                self.result_success_num += 1
+                self.show_test_result()
+            else:
+                add_test_result_log(exp,act)
+                self.result_label.setText(self.result_fail)
+                self.excute_script.logger.info("用例的执行情况是:" + self.result_fail + "\n")
+                self.result_fail_num += 1
+                self.show_test_result()
+
+        if  assert_method == "不相等":
+
+            if act != exp :
+                add_test_result_log(exp,act)
+                self.result_label.setText(self.result_success)
+                self.excute_script.logger.info("用例的执行情况是:" + self.result_success + "\n")
+                self.result_success_num += 1
+                self.show_test_result()
+            else:
+                add_test_result_log(exp,act)
+                self.result_label.setText(self.result_fail)
+                self.excute_script.logger.info("用例的执行情况是:" + self.result_fail + "\n")
+                self.result_fail_num += 1
+                self.show_test_result()
+
+
+    def write_test_report(self,title,test_time,status):
+        with open(os.path.join(os.path.dirname(__file__), "test_case_log", title + ".log"), "r", encoding="utf-8") as f:
+            log_text = f.read()
+        if status ==1 :
+            with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+") as f:
                 if self.result_label.text() == self.result_success:
-                    f.write(TestHtmlReport.HTMLROWPASS.format(self.basename, self.title_line_edit.text(), log_text,
-                                                              end_time - start_time, self.result_label.text()))
+                    f.write(TestHtmlReport.HTMLROWPASS.format(self.basename,title,log_text,test_time,self.result_label.text()))
                 if self.result_label.text() == self.result_fail:
-                    f.write(
-                        TestHtmlReport.HTMLROWUNPASS.format(self.basename, self.title_line_edit.text(), log_text,
-                                                            end_time - start_time, self.result_label.text()))
+                    f.write(TestHtmlReport.HTMLROWUNPASS.format(self.basename,title,log_text,test_time, self.result_label.text()))
+        if status ==0:
+            with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+") as f:
+                f.write(TestHtmlReport.HTMLROWERROR.format(self.basename,title,log_text,test_time,self.result_label.text()))
 
-        except:
-            # shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
-            end_time = time.time()
-            png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png",
-                                    self.title_line_edit.text() + ".png")
-            self.true_dict["test_screenshot_png"](png_name)
-            self.driver_true.quit()
-            self.result_label.setText(self.result_error)
-            self.excute_script.logger.error("用例执行异常，请检查脚本\n")
-            self.result_error_num += 1
-            with open(os.path.join(os.path.dirname(__file__), "test_case_log", self.title_line_edit.text() + ".log"),
-                      "r", encoding="utf-8") as f:
-                log_text = f.read()
-            with open(
-                    os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),
-                    "a+") as f:
-                f.write(TestHtmlReport.HTMLROWERROR.format(self.basename, self.title_line_edit.text(), log_text,
-                                                           end_time - start_time, self.result_label.text()))
-
-    def single_excute_action_method_two(self,test_case,excute_path):#用例失败copy一份出来
+    def single_excute_action_method_two(self,test_case,excute_path,status):#用例失败copy一份出来 1    0代表成功删除文件
         self.init_driver()
         start_time = time.time()
         try:
             self.package_excute_all_method(test_case)
-            act_result = self.back_data_list[-1]
-            if test_case.assertmethod == "相等":
-                if act_result == test_case.exp:
-                    self.excute_script.logger.info("用例的期望结果是:" + test_case.exp )
-                    self.excute_script.logger.info("用例的实际结果是:" + act_result )
-                    self.result_label.setText(self.result_success)
-                    self.excute_script.logger.info("用例的执行情况是:" + self.result_success+"\n")
-                    self.result_success_num += 1
-                    self.excute_label.setText(str(self.result_success_num)+"/"+str(self.result_fail_num)+"/"+str(self.result_error_num)+"/"+str(self.all_test_case))
-                else:
-                    self.excute_script.logger.info("用例的期望结果是:" + test_case.exp)
-                    self.excute_script.logger.info("用例的实际结果是:" + act_result)
-                    self.result_label.setText(self.result_fail)
-                    self.excute_script.logger.info("用例的执行情况是:" + self.result_fail+"\n")
-                    self.result_fail_num += 1
-                    self.excute_label.setText(
-                        str(self.result_success_num) + "/" + str(self.result_fail_num) + "/" + str(
-                            self.result_error_num) + "/" + str(self.all_test_case))
-                    shutil.copy(excute_path,os.path.join(os.path.dirname(__file__),"error_and_fail_test_case"))
-            if test_case.assertmethod == "不相等":
-                if act_result != test_case.exp:
-                    self.excute_script.logger.info("用例的期望结果是:" + test_case.exp )
-                    self.excute_script.logger.info("用例的实际结果是:" + act_result)
-                    self.result_label.setText(self.result_success)
-                    self.excute_script.logger.info("用例的执行情况是:" + self.result_success+"\n")
-                    self.result_success_num += 1
-                    self.excute_label.setText(
-                        str(self.result_success_num) + "/" + str(self.result_fail_num) + "/" + str(
-                            self.result_error_num) + "/" + str(self.all_test_case))
-                    # os.remove(excute_path)
-                else:
-                    self.excute_script.logger.info("用例的期望结果是:" + test_case.exp)
-                    self.excute_script.logger.info("用例的实际结果是:" + act_result)
-                    self.result_label.setText(self.result_fail)
-                    self.excute_script.logger.info("用例的执行情况是:" + self.result_fail+"\n")
-                    self.result_fail_num += 1
-                    self.excute_label.setText(
-                        str(self.result_success_num) + "/" + str(self.result_fail_num) + "/" + str(
-                            self.result_error_num) + "/" + str(self.all_test_case))
-                    shutil.copy(excute_path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
-            end_time = time.time()
-            self.back_data_list.clear()
             if self.default_teardown_value == "每个用例执行完关闭浏览器":
                 self.driver_true.quit()
-            with open(os.path.join(os.path.dirname(__file__), "test_case_log",test_case.title+".log"), "r", encoding="utf-8") as f:
-                log_text = f.read()
-            with open(os.path.join(os.path.dirname(__file__),"test_case_report",self.excute_time+"_report.html"),"a+") as f:
-                if self.result_label.text()== self.result_success:
-                   f.write(TestHtmlReport.HTMLROWPASS.format(self.basename,test_case.title,log_text,end_time-start_time,self.result_label.text()))
-                if self.result_label.text() == self.result_fail:
-                   f.write(TestHtmlReport.HTMLROWUNPASS.format(self.basename,test_case.title, log_text,
-                                                          end_time - start_time, self.result_label.text()))
-        except:
-            shutil.copy(excute_path, os.path.join(os.path.dirname(__file__),"error_and_fail_test_case"))
+            act_result = self.back_data_list[-1]
+            self.calculate_test_result(test_case.assertmethod,test_case.exp,act_result,excute_path)
+            if status ==1:
+                self.copy_error_file(excute_path)
+            else:
+                self.remover_success_file(excute_path)
             end_time = time.time()
-            png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png",
-                                    test_case.title + ".png")
+            self.back_data_list.clear()
+            test_time = end_time - start_time
+            self.write_test_report(test_case.title,test_time,1)
+        except:
+            if status ==1:
+                self.copy_error_file(excute_path)
+            self.copy_error_file(excute_path)
+            png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png",test_case.title + ".png")
             self.true_dict["test_screenshot_png"](png_name)
             self.driver_true.quit()
+            end_time = time.time()
+            test_time = end_time - start_time
             self.result_label.setText(self.result_error)
             self.excute_script.logger.error("用例执行异常，请检查脚本\n")
             self.result_error_num += 1
-            self.excute_label.setText(str(self.result_success_num) + "/" + str(self.result_fail_num) + "/" + str(
-                self.result_error_num) + "/" + str(self.all_test_case))
-            with open(os.path.join(os.path.dirname(__file__), "test_case_log", test_case.title + ".log"),"r", encoding="utf-8") as f:
-                log_text = f.read()
-            with open(os.path.join(os.path.dirname(__file__), "test_case_report", self.excute_time + "_report.html"),"a+") as f:
-                f.write(TestHtmlReport.HTMLROWERROR.format(self.basename,test_case.title,log_text,end_time - start_time,self.result_label.text()))
+            self.show_test_result()
+            self.write_test_report(test_case.title, test_time, 0)
+
 
 
     def sub_step_btn_method(self):
