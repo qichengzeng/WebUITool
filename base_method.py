@@ -25,7 +25,7 @@ class BasePage:
             return position
         except Exception as e:
             self.logger.error("获取当前窗口位置失败")
-            raise e
+            #raise e
     def set_window_position(self,y,x):
         self.logger.info("正在准备设置当前窗口的位置")
         try:
@@ -35,7 +35,7 @@ class BasePage:
             self.logger.info("设置当前窗口位置成功")
         except Exception as e:
             self.logger.error("设置当前窗口位置失败")
-            raise e
+            #raise e
 
     def get_window_size(self):
         self.logger.info("正在准备获取当前窗口的大小")
@@ -45,7 +45,7 @@ class BasePage:
             return size
         except Exception as e:
             self.logger.error("获取当前窗口大小失败")
-            raise e
+            #raise e
     def set_window_size(self,width,height):
         self.logger.info("正在准备设置当前窗口的大小")
         try:
@@ -55,7 +55,7 @@ class BasePage:
             self.logger.info("设置当前窗口大小成功")
         except Exception as e:
             self.logger.error("设置当前窗口大小失败")
-            raise e
+            #raise e
     def title(self):
         self.logger.info("正在准备获取当前页面的title")
         try:
@@ -64,7 +64,7 @@ class BasePage:
             return title
         except Exception as e:
             self.logger.error("获取当前页面的title失败")
-            raise e
+            #raise e
     def get_page_source(self):
         self.logger.info("正在准备获取当前页面的html源码")
         try:
@@ -73,7 +73,7 @@ class BasePage:
             return page_source
         except Exception as e:
             self.logger.error("获取当前页面的html源码失败")
-            raise e
+            #raise e
     def get_current_url(self):
         self.logger.info("正在准备获取当前页面的网址")
         try:
@@ -82,7 +82,7 @@ class BasePage:
             return current_url
         except Exception as e:
             self.logger.error("获取当前页面的网址失败")
-            raise e
+            #raise e
     # def
 
     def alter_is_present(self, timeout=30, frequency=1):
@@ -102,7 +102,7 @@ class BasePage:
             self.logger.info("{}对象点击成功".format(ele_object))
         except Exception as e:
             self.logger.error("{}对象点击失败".format(ele_object))
-            raise e
+            #raise e
 
     def click_elements_for_one(self, loc, index):
         self.logger.info("正在准备点击{}元素下标为{}的元素".format(loc, index))
@@ -119,7 +119,7 @@ class BasePage:
             self.logger.info("{}元素点击成功".format(loc))
         except Exception as e:
             self.logger.error("{}元素点击失败".format(loc))
-            raise e
+            #raise e
     def clear(self,loc):
         self.logger.info("正在准备清除{}元素输入框内容".format(loc))
         try:
@@ -135,7 +135,7 @@ class BasePage:
             self.logger.info("网页回退成功")
         except Exception as e:
             self.logger.error("网页回退失败")
-            raise e
+            #raise e
 
     def forward(self):
         self.logger.info("正在准备前进")
@@ -144,7 +144,7 @@ class BasePage:
             self.logger.info("网页前进成功")
         except Exception as e:
             self.logger.error("网页前进失败")
-            raise e
+            #raise e
 
     def accept_or_dismiss_alter(self, value=1):  # driver.switch_to.alert.accept()
         self.logger.info("正在准备处理alter弹框")
@@ -161,7 +161,7 @@ class BasePage:
                 return text
         except Exception as e:
             self.logger.error("alter弹框处理失败")
-            raise e
+            #raise e
     def find_element(self,loc):
         self.logger.info("正在准备查找{}元素".format(loc))
         try:
@@ -170,7 +170,7 @@ class BasePage:
             return ele_object
         except Exception as e:
             self.logger.error("{}元素查找失败")
-            raise e
+            #raise e
     def find_elements_back_length(self,loc):
         self.logger.info("正在准备查找一些{}元素".format(loc))
         try:
@@ -179,7 +179,7 @@ class BasePage:
             return len(ele_object_list)
         except Exception as e:
             self.logger.error("一些{}元素查找失败".format())
-            raise e
+            #raise e
 
     def find_elements_back_object(self,loc,index):
         self.logger.info("正在准备查找一些{}元素".format(loc))
@@ -190,7 +190,7 @@ class BasePage:
             return ele_object[index]
         except Exception as e:
             self.logger.error("一些{}元素查找失败".format(loc))
-            raise e
+            #raise e
 
     def find_elements_back_objects(self,loc):
         self.logger.info("正在准备查找一些{}元素".format(loc))
@@ -200,7 +200,7 @@ class BasePage:
             return ele_objects
         except Exception as e:
             self.logger.error("一些{}元素查找失败".format(loc))
-            raise e
+            #raise e
 
     def get(self,url):
         self.logger.info("正在准备访问{}".format(url))
@@ -209,7 +209,7 @@ class BasePage:
             self.logger.info("访问{}网址成功".format(url))
         except Exception as e:
             self.logger.error("访问{}网址失败".format(url))
-            raise e
+            #raise e
     def text(self,loc):
         self.logger.info("正在准备获取{}元素的文本值".format(loc))
         try:
@@ -218,7 +218,7 @@ class BasePage:
             return text_value
         except Exception as e:
             self.logger.error("获取{}元素文本值失败".format(loc))
-            raise e
+            #raise e
 
     # def is_selected(self, loc):
     #     self.logger.info("正在准备判断{}元素是否可被选中".format(loc))
@@ -232,7 +232,7 @@ class BasePage:
     #             return is_selected_value
     #     except Exception as e:
     #         self.logger.error("判断{}元素是否被选中失败".format(loc))
-    #         raise e
+    #         #raise e
 
     # def is_selected_by_ele(self, ele):
     #     self.logger.info("正在准备判断{}对象是否可被选中".format(ele))
@@ -246,7 +246,7 @@ class BasePage:
     #             return is_selected_value
     #     except Exception as e:
     #         self.logger.error("判断{}对象是否被选中失败".format(ele))
-    #         raise e
+    #         #raise e
     def refresh(self):
         self.logger.info("正在准备刷新页面")
         try:
@@ -262,7 +262,7 @@ class BasePage:
             self.logger.info("{}元素输入框输入_{}_内容成功".format(loc,value))
         except Exception as e:
             self.logger.error("{}元素输入框输入{}内容失败".format(loc,value))
-            raise e
+            #raise e
 
     def scroll_into_view(self,loc):
         self.logger.info("正在准备滚动屏幕到目标元素{}".format(loc))
@@ -271,7 +271,7 @@ class BasePage:
             self.logger.info("滚动到目标元素{}成功".format(loc))
         except Exception as e:
             self.logger.error("滚动到目标元素{}失败".format(loc))
-            raise e
+            #raise e
 
     def select_by_value(self,loc,select_value):
         self.logger.info("正在准备选中下拉列表的value值为{}的元素".format(select_value))
@@ -281,7 +281,7 @@ class BasePage:
             self.logger.info("下拉列表value值为{}的元素被选中".format(select_value))
         except Exception as e:
             self.logger.error("下拉列表value值为{}的元素选中失败".format())
-            raise e
+            #raise e
     def sql_search_one(self,sql):
         self.logger.info("正在准备查询数据库值")
         try:
@@ -305,7 +305,7 @@ class BasePage:
                 return  text
         except Exception as e:
             self.logger.error("数据库查询失败")
-            raise e
+            #raise e
     def title(self):
         self.logger.info("正在准备获取网页的标题")
         try:
@@ -314,7 +314,7 @@ class BasePage:
             return title
         except Exception as e:
             self.logger.error("标题获取失败")
-            raise e
+            #raise e
     def presence_of_element_located(self,loc,timeout=30,frequency=1):
         """等待元素被加载到dom树并不一定可见"""
         self.logger.info("正在准备等待元素{}被加载到dom树中".format(loc))
@@ -325,7 +325,7 @@ class BasePage:
             self.logger.info("{}元素被成功加载到dom树".format(loc))
         except Exception as e:
             self.logger.error("{}元素不存在dom树中")
-            raise e
+            #raise e
     def visibility_of_element_located(self,loc,timeout=30,frequency=1):
         """等待元素可见"""
         self.logger.info("正在准备等待{}元素可见".format(loc))
@@ -336,7 +336,7 @@ class BasePage:
              self.logger.info("{}元素可见成功".format(loc))
         except Exception as e:
              self.logger.error("等待{}元素可见失败".format(loc))
-             raise e
+             #raise e
     def double_click(self,loc):
         self.logger.info("正在准备双击{}元素".format(loc))
         try:
@@ -345,7 +345,7 @@ class BasePage:
             self.logger.info("{}元素双击成功".format(loc))
         except Exception as e:
             self.logger.error("{}元素双击失败".format(loc))
-            raise e
+            #raise e
 
     def select_by_visible_text(self,loc,select_text):
         self.logger.info("正在准备选中下拉列表的text值为{}的元素".format(select_text))
@@ -355,7 +355,7 @@ class BasePage:
             self.logger.info("下拉列表text值为{}的元素被选中".format(select_text))
         except Exception as e:
             self.logger.error("下拉列表text值为{}的元素选中失败".format())
-            raise e
+            #raise e
 
     def select_by_index(self, loc, select_index):
         self.logger.info("正在准备选中下拉列表的索引值为{}的元素".format(select_index))
@@ -365,7 +365,7 @@ class BasePage:
             self.logger.info("下拉列表的索引值为{}的元素被选中".format(select_index))
         except Exception as e:
             self.logger.error("下拉列表的索引值为{}的元素选中失败".format())
-            raise e
+            #raise e
     def get_select_text(self, loc):
         self.logger.info("正在准备获取下拉列表选中的文本_{}的元素".format(loc))
         try:
@@ -375,7 +375,7 @@ class BasePage:
             return text
         except Exception as e:
             self.logger.error("获取下拉列表选中的文本失败".format())
-            raise e
+            #raise e
     def set_clipboard_data(self,data):
         self.logger.info("正在设置剪切板内容为_{}".format(data))
         try:
@@ -389,7 +389,7 @@ class BasePage:
             self.logger.info("设置剪切板内容成功为_{}".format(data))
         except Exception as e:
             self.logger.error("设置剪切板内容失败")
-            raise e
+            #raise e
     def ctrl_c(self):
         self.logger.info("正在准备复制内容")
         try:
@@ -408,7 +408,7 @@ class BasePage:
             self.logger.info("复制内容成功")
         except Exception as e:
             self.logger.error("复制内容失败")
-            raise e
+            #raise e
     def enter(self):
         self.logger.info("正在准备按下enter按键")
         try:
@@ -423,7 +423,7 @@ class BasePage:
             self.logger.info("按下enter按键成功")
         except Exception as e:
             self.logger.error("按下enter按键失败")
-            raise e
+            #raise e
     def context_click(self,loc):
         self.logger.info("正在准备点击鼠标右键")
         try:
@@ -431,7 +431,7 @@ class BasePage:
             self.logger.info("点击鼠标右键成功")
         except Exception as e:
             self.logger.error("点击鼠标右键失败")
-            raise e
+            #raise e
     def click_and_hold(self,loc):
         self.logger.info("正在准备按住鼠标左键")
         try:
@@ -439,7 +439,7 @@ class BasePage:
             self.logger.info("按住鼠标左键成功")
         except Exception as e:
             self.logger.error("按住鼠标左键失败")
-            raise e
+            #raise e
     def release(self,loc):
         self.logger.info("正在准备释放鼠标左键")
         try:
@@ -447,7 +447,7 @@ class BasePage:
             self.logger.info("释放鼠标左键成功")
         except Exception as e:
             self.logger.error("释放鼠标左键失败")
-            raise e
+            #raise e
     def move_to_element(self,loc):
         self.logger.info("正在准备移动到该元素_{}".format(loc))
         try:
@@ -455,7 +455,7 @@ class BasePage:
             self.logger.info("移动元素成功")
         except Exception as e:
             self.logger.error("移动元素失败")
-            raise e
+            #raise e
     def invisibility_of_element_located(self,loc,timeout=30,frequency=1):
         """等待元素不可见"""
         self.logger.info("正在准备等待{}元素不可见".format(loc))
@@ -466,7 +466,7 @@ class BasePage:
              self.logger.info("{}元素不可见成功".format(loc))
         except Exception as e:
              self.logger.error("等待{}元素不可见失败".format(loc))
-             raise e
+             #raise e
     def switch_to_frame_by_id_or_name(self,value):
         self.logger.info("正在准备跳转到id或name为_{}_的frame".format(value))
         try:
@@ -474,7 +474,7 @@ class BasePage:
             self.logger.info("跳转到frame成功")
         except Exception as e:
             self.logger.error("跳转到frame失败")
-            raise e
+            #raise e
 
     def switch_to_frame_by_ele(self,loc):
         self.logger.info("正在准备跳转到_{}_的frame".format(loc))
@@ -483,7 +483,7 @@ class BasePage:
             self.logger.info("跳转到frame成功")
         except Exception as e:
             self.logger.error("跳转到frame失败")
-            raise e
+            #raise e
     def switch_to_default_context(self):
         self.logger.info("正在准备跳出iframe")
         try:
@@ -491,7 +491,7 @@ class BasePage:
             self.logger.info("返回主界面成功")
         except Exception as e:
             self.logger.error("返回主界面失败")
-            raise e
+            #raise e
     def get_attribute(self,loc,name):
         self.logger.info("正在准备获取元素_{}_的{}的值".format(loc,name))
         try:
@@ -500,7 +500,7 @@ class BasePage:
             return value
         except Exception as e:
             self.logger.error("获取元素属性值失败")
-            raise e
+            #raise e
     def test_screenshot_png(self,filename):
         self.logger.info("正在准备截图")
         try:
@@ -508,7 +508,7 @@ class BasePage:
             self.logger.info("截图成功")
         except Exception as e:
             self.logger.error("截图失败")
-            raise e
+            #raise e
     def get_register_name(self):
         self.logger.info("正在准备创建注册用户名")
         try:
@@ -517,7 +517,7 @@ class BasePage:
            return  name
         except Exception as e:
             self.logger.error("创建用户名失败")
-            raise e
+            #raise e
     def get_mobile_phone(self):
         self.logger.info("正在准备创建手机号")
         try:
@@ -526,7 +526,7 @@ class BasePage:
             return mobile
         except Exception as e:
             self.logger.error("创建手机号失败")
-            raise e
+            #raise e
     def scrollBy(self,y):
         self.logger.info("正在准备竖着移动滚动条移动量为_{}".format(y))
         try:
@@ -544,7 +544,7 @@ class BasePage:
             self.logger.info("强制等待_{}秒_成功".format(s))
         except Exception as e:
             self.logger.error("强制等待失败")
-            raise e
+            #raise e
 
     def back_method_dict(self):
         return {
