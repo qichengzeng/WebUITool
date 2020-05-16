@@ -1,0 +1,23 @@
+2020-05-16 22:05:54,637____test_case___INFO___a_正常登录_用例开始执行
+2020-05-16 22:05:57,927____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-16 22:05:57,928____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-16 22:05:57,939____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-16 22:05:58,010____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-16 22:05:58,011____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-16 22:05:58,011____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-16 22:05:58,020____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-16 22:05:58,084____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-16 22:05:58,084____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-16 22:05:58,085____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-16 22:05:58,093____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-16 22:05:58,142____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-16 22:05:58,143____test_case___INFO___正在准备等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见
+2020-05-16 22:06:28,746____test_case___ERROR___等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见失败
+2020-05-16 22:06:28,747____test_case___INFO___正在准备获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素的文本值
+2020-05-16 22:06:28,748____test_case___INFO___正在准备查找('xpath', "//label[text()='诊所：']//following-sibling::span")元素
+2020-05-16 22:06:28,768____test_case___INFO___('xpath', "//label[text()='诊所：']//following-sibling::span")元素查找成功
+2020-05-16 22:06:28,779____test_case___INFO___获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素文本值成功_景贤口腔
+2020-05-16 22:06:28,780____test_case___INFO___用例的期望结果是:牙典
+2020-05-16 22:06:28,780____test_case___INFO___用例的实际结果是:景贤口腔
+2020-05-16 22:06:28,781____test_case___INFO___用例的执行情况是:用例执行失败
+

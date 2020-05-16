@@ -19,7 +19,7 @@ def package_excute_method(self,test_case):
             if para_num > 1:  # ÓĞ²ÎÊı
                 if para_num == 2:
                     if test_case.step[i] == "get":
-                        if test_case.data[i].endswith(".ZQC"):
+                        if test_case.data[i].endswith(".web"):
                             index = int(test_case.data[i].split(".")[0])
                             back_data = self.true_dict[test_case.step[i]](ip_text + self.global_para[index])
                         else:
@@ -49,7 +49,7 @@ def package_excute_method(self,test_case):
                                     if int(eval(test_case.data_transfer[i])[1]) == 3:
                                         test_case.data_three[num] = back_data
                     else:
-                        if test_case.data[i].endswith(".ZQC"):
+                        if test_case.data[i].endswith(".web"):
                             index = int(test_case.data[i].split(".")[0])
                             back_data = self.true_dict[test_case.step[i]](self.global_para[index])
                             self.back_data_list.append(back_data)
@@ -80,9 +80,9 @@ def package_excute_method(self,test_case):
                                     if int(eval(test_case.data_transfer[i])[1]) == 3:
                                         test_case.data_three[num] = back_data
                 if para_num == 3:
-                    if test_case.data[i].endswith(".ZQC"):
+                    if test_case.data[i].endswith(".web"):
                         test_case.data[i] = (self.global_para[int(test_case.data[i].split(".")[0])])
-                    if test_case.data_two[i].endswith(".ZQC"):
+                    if test_case.data_two[i].endswith(".web"):
                             test_case.data_two[i] = self.global_para[int(test_case.data_two[i].split(".")[0])]
 
                     back_data = self.true_dict[test_case.step[i]](test_case.data[i],test_case.data_two[i])
@@ -111,11 +111,11 @@ def package_excute_method(self,test_case):
                                 if int(eval(test_case.data_transfer[i])[1]) == 3:
                                     test_case.data_three[num] = back_data
                 if para_num == 4:
-                    if test_case.data[i].endswith(".ZQC"):
+                    if test_case.data[i].endswith(".web"):
                             test_case.data[i] = self.global_para[int(test_case.data[i].split(".")[0])]
-                    if test_case.data_two[i].endswith(".ZQC"):
+                    if test_case.data_two[i].endswith(".web"):
                         test_case.data_two[i] = self.global_para[int(test_case.data_two[i] .split(".")[0])]
-                    if test_case.data_three[i].endswith(".ZQC"):
+                    if test_case.data_three[i].endswith(".web"):
                         test_case.data_three[i] = self.global_para[int(test_case.data_three[i] .split(".")[0])]
                     back_data = self.true_dict[test_case.step[i]](test_case.data[i],test_case.data_two[i],test_case.data_three[i] )
                     self.back_data_list.append(back_data)
@@ -187,7 +187,7 @@ def package_excute_method(self,test_case):
                             read_list = read_text.split(";")
                         self.true_dict[test_case.step[i]](locator_name, read_list[1])
                         continue
-                    if test_case.data[i].endswith(".ZQC"):
+                    if test_case.data[i].endswith(".web"):
                         test_case.data[i] = self.global_para[int(test_case.data[i].split(".")[0])]
                     back_data = self.true_dict[test_case.step[i]](locator_name,test_case.data[i])
                     self.back_data_list.append(back_data)
@@ -215,9 +215,9 @@ def package_excute_method(self,test_case):
                                 if int(eval(test_case.data_transfer[i])[1]) == 3:
                                     test_case.data_three[num] = back_data
                 if para_num == 4:
-                    if test_case.data[i].endswith(".ZQC"):
+                    if test_case.data[i].endswith(".web"):
                         test_case.data[i] = self.global_para[int(test_case.data[i].split(".")[0])]
-                    if test_case.data_two[i].endswith(".ZQC"):
+                    if test_case.data_two[i].endswith(".web"):
                         test_case.data_two[i] = self.global_para[int(test_case.data_two[i].split(".")[0])]
                     back_data = self.true_dict[test_case.step[i]](locator_name,test_case.data[i],test_case.data_two[i])
                     self.back_data_list.append(back_data)
@@ -245,11 +245,11 @@ def package_excute_method(self,test_case):
                                 if int(eval(test_case.data_transfer[i])[1]) == 3:
                                     test_case.data_three[num] = back_data
                 if para_num == 5:
-                    if test_case.data[i].endswith(".ZQC"):
+                    if test_case.data[i].endswith(".web"):
                         test_case.data[i] = self.global_para[int(test_case.data[i].split(".")[0])]
-                    if test_case.data_two[i].endswith(".ZQC"):
+                    if test_case.data_two[i].endswith(".web"):
                         test_case.data_two[i] = self.global_para[int(test_case.data_two[i].split(".")[0])]
-                    if test_case.data_three[i].endswith(".ZQC"):
+                    if test_case.data_three[i].endswith(".web"):
                         test_case.data_three[i] = self.global_para[int(test_case.data_three[i].split(".")[0])]
                     back_data = self.true_dict[test_case.step[i]](locator_name,test_case.data[i],test_case.data_two[i],test_case.data_three[i])
                     self.back_data_list.append(back_data)
@@ -301,7 +301,7 @@ def package_excute_method(self,test_case):
                                 test_case.data_two[num] = back_data
                             if int(eval(test_case.data_transfer[i])[1]) == 3:
                                 test_case.data_three[num] = back_data
-    if test_case.exp.endswith(".ZQC"):
+    if test_case.exp.endswith(".web"):
         test_case.exp = self.global_para[int(test_case.exp.split(".")[0])]
     png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png", test_case.title + ".png")
     self.true_dict["test_screenshot_png"](png_name)
