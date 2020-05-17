@@ -162,6 +162,8 @@ class MainInit(QMainWindow):
         self.data_transfer_list = []
         self.data_transfer_text_list = []
         self.back_data_list = []
+        self.resize_size = (70, 25)
+        self.resize_size_radio = (60, 25)
         self.result_success = "用例执行通过"
         self.result_success_num = 0
         self.result_fail_num = 0
@@ -237,8 +239,6 @@ class MainInit(QMainWindow):
         self.single_excute_action.triggered.connect(self.single_excute_action_method)
         self.all_excute_action = QAction("执行所有测试用例",self)
         self.all_excute_action.triggered.connect(self.all_excute_action_method)
-        self.setup_action = QAction("添加前置条件",self)
-        self.setup_action.triggered.connect(self.setup_action_method)
         self.teardown_action = QAction("添加后置处理",self)
         self.teardown_action.triggered.connect(self.teardown_action_method)
         self.view_result_action = QAction("查看执行结果",self)
@@ -258,7 +258,6 @@ class MainInit(QMainWindow):
 
         self.tool.addAction(self.single_excute_action)
         self.tool.addAction(self.all_excute_action)
-        self.tool.addAction(self.setup_action)
         self.tool.addAction(self.teardown_action)
         self.tool.addAction(self.view_result_action)
         self.tool.addAction(self.view_log_action)
@@ -273,7 +272,7 @@ class MainInit(QMainWindow):
         self.url_line_edit.resize(self.line_edit_width,self.line_edit_height)
 
         self.fail_rerun_combox =  QComboBox(self)
-        self.fail_rerun_combox.resize(75,25)
+        self.fail_rerun_combox.resize(*self.resize_size)
         self.fail_rerun_combox.addItems(["0","1","2","3","4"])
         self.fail_rerun_combox.setToolTip("失败重跑次数")
 
@@ -292,13 +291,10 @@ class MainInit(QMainWindow):
         self.data_table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self.data_table.setColumnCount(6)
         self.data_table.setHorizontalHeaderLabels(["步骤名称","参数一","参数二","参数三","输出数据","数据传递"])
-        # self.data_table.resizeColumnsToContents()
-        # self.data_table.resizeRowsToContents()
         self.data_name_list.append(QLineEdit("1"))
         self.data_name_list[0].setReadOnly(True)
         self.data_value_list.append(self.create_Qlineedit_object())
         self.data_value_list[0].editingFinished.connect(self.data_value_list_method)
-        data_value_two_edit = QLineEdit()
         self.data_value_two_list.append(self.create_Qlineedit_object())
         self.data_value_two_list[0].editingFinished.connect(self.data_value_two_list_method)
         self.data_value_two_list[0].setReadOnly(True)
@@ -309,25 +305,12 @@ class MainInit(QMainWindow):
         self.data_output_value_list[0].setContextMenuPolicy(Qt.CustomContextMenu)
         self.data_output_value_list[0].customContextMenuRequested.connect(self.inset_and_delete_action)
         self.data_transfer_list.append(QLineEdit())
-        # self.data_value_list[0].setReadOnly(True)
-        self.data_value_list[0].setAlignment(Qt.AlignCenter)
-        self.data_value_two_list[0].setAlignment(Qt.AlignCenter)
-        self.data_value_three_list[0].setAlignment(Qt.AlignCenter)
-        self.data_name_list[0].setAlignment(Qt.AlignCenter)
-        self.data_output_value_list[0].setAlignment(Qt.AlignCenter)
-        self.data_transfer_list[0].setAlignment(Qt.AlignCenter)
-        self.data_table.setCellWidget(0,0,self.data_name_list[0])
-        self.data_table.setCellWidget(0,1,self.data_value_list[0])
-        self.data_table.setCellWidget(0,2,self.data_value_two_list[0])
-        self.data_table.setCellWidget(0,3,self.data_value_three_list[0])
-        self.data_table.setCellWidget(0,4,self.data_output_value_list[0])
-        self.data_table.setCellWidget(0,5,self.data_transfer_list[0])
+
 
         self.data_table.resize(self.table_width,self.table_row_height)
         self.data_table.verticalHeader().setVisible(False)
         self.data_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.data_table.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        # self.data_table.verticalHeader().setSectionResizeMode(QHeaderView.Stretch)
+
 
         self.exp_line_edit = QLineEdit(self)
         self.exp_line_edit.setPlaceholderText("预期结果")
@@ -360,31 +343,25 @@ class MainInit(QMainWindow):
         self.horizontal_title_list = ["操作步骤","所属界面","界面元素名称"]
         self.steps_table.resize(self.table_width,self.table_row_height)
         self.steps_table.setHorizontalHeaderLabels(self.horizontal_title_list)
-        self.page_combox_list.append(self.create_Qcombox_object())
+        self.driver_false = BasePage(driver="driver", title="test.log")
+        self.pack_combox(0)
+        self.set_Alignment(0)
+        self.set_table(0)
 
-        self.page_combox_list[0].addItems(self.sections_list)
-        self.page_combox_list[0].currentIndexChanged.connect(self.page_combox_list_method)
-        self.locator_name_combox_list.append(self.create_Qcombox_object())
-        self.locator_name_combox_list[0].addItems(self.options_dict.get(self.sections_list[0]))
-        self.step_combox_list.append(self.create_Qcombox_object())
-        self.driver_false = BasePage(driver="driver",title="test.log")
-        self.step_combox_list[0].addItems(list(self.driver_false.back_method_dict().keys()))
-        self.steps_table.setCellWidget(0, 0,self.step_combox_list[0])
-        self.steps_table.setCellWidget(0, 1,self.page_combox_list[0])
-        self.steps_table.setCellWidget(0, 2, self.locator_name_combox_list[0])
+
         self.chrome_radio = QRadioButton("chrome",self)
         self.chrome_radio.setChecked(True)
-        self.chrome_radio.resize(60,25)
+        self.chrome_radio.resize(*self.resize_size_radio)
         self.ie_radio = QRadioButton("ie",self)
-        self.ie_radio.resize(60,25)
+        self.ie_radio.resize(*self.resize_size_radio)
         self.firefox_radio = QRadioButton("firefox",self)
-        self.firefox_radio.resize(60,25)
+        self.firefox_radio.resize(*self.resize_size_radio)
         self.day_radio = QPushButton("每天生效", self)
         self.week_radio = QPushButton("每周生效", self)
         self.none_radio = QPushButton("全都失效", self)
-        self.day_radio.resize(70,25)
-        self.week_radio.resize(70, 25)
-        self.none_radio.resize(70, 25)
+        self.day_radio.resize(*self.resize_size)
+        self.week_radio.resize(*self.resize_size)
+        self.none_radio.resize(*self.resize_size)
         self.none_radio.setChecked(True)
         self.day_radio.pressed.connect(self.day_radio_method)
         self.week_radio.pressed.connect(self.week_radio_method)
@@ -392,10 +369,10 @@ class MainInit(QMainWindow):
         self.hour_combox = QComboBox(self)
         self.hour_combox.addItems(minute_list)
         self.day_combox = QComboBox(self)
-        self.day_combox.resize(70,25)
+        self.day_combox.resize(*self.resize_size)
         self.week_combox = QComboBox(self)
-        self.week_combox.resize(70,25)
-        self.hour_combox.resize(70,25)
+        self.week_combox.resize(*self.resize_size)
+        self.hour_combox.resize(*self.resize_size)
         self.day_combox.addItems(hour_list)
         self.week_combox.addItems(day_list)
         self.timer = MyQTimer(self)
@@ -403,6 +380,32 @@ class MainInit(QMainWindow):
         self.timer.timeout.connect(self.fail_and_error_reexcute)#超时执行失败和错误的测试用例
         self.timer.start(1000*60)
 
+    def pack_combox(self,i):
+        self.page_combox_list.append(self.create_Qcombox_object())
+        self.page_combox_list[i].addItems(self.sections_list)
+        self.page_combox_list[i].currentIndexChanged.connect(self.page_combox_list_method)
+        self.locator_name_combox_list.append(self.create_Qcombox_object())
+        self.locator_name_combox_list[i].addItems(self.options_dict.get(self.sections_list[0]))
+        self.step_combox_list.append(self.create_Qcombox_object())
+        self.step_combox_list[i].addItems(list(self.driver_false.back_method_dict().keys()))
+    def set_Alignment(self,i):
+        self.data_value_list[i].setAlignment(Qt.AlignCenter)
+        self.data_value_two_list[i].setAlignment(Qt.AlignCenter)
+        self.data_value_three_list[i].setAlignment(Qt.AlignCenter)
+        self.data_name_list[i].setAlignment(Qt.AlignCenter)
+        self.data_output_value_list[i].setAlignment(Qt.AlignCenter)
+        self.data_transfer_list[i].setAlignment(Qt.AlignCenter)
+
+    def set_table(self,i):
+        self.data_table.setCellWidget(i, 0, self.data_name_list[i])
+        self.data_table.setCellWidget(i, 1, self.data_value_list[i])
+        self.data_table.setCellWidget(i, 2, self.data_value_two_list[i])
+        self.data_table.setCellWidget(i, 3, self.data_value_three_list[i])
+        self.data_table.setCellWidget(i, 4, self.data_output_value_list[i])
+        self.data_table.setCellWidget(i, 5, self.data_transfer_list[i])
+        self.steps_table.setCellWidget(i, 0, self.step_combox_list[i])
+        self.steps_table.setCellWidget(i, 1, self.page_combox_list[i])
+        self.steps_table.setCellWidget(i, 2, self.locator_name_combox_list[i])
 
     def fail_and_error_reexcute(self):
         if self.excute_all_status == 0:
@@ -412,6 +415,7 @@ class MainInit(QMainWindow):
         combox =  ExtendedComboBox()
         combox.currentTextChanged.connect(self.hover_combox_display_method)
         return combox
+
     def hover_combox_display_method(self):
         self.sender().setToolTip(self.sender().currentText())
 
@@ -595,29 +599,22 @@ class MainInit(QMainWindow):
             self.steps_table.insertRow(position)
             self.data_table.insertRow(position)
             self.steps_table_row = self.steps_table_row + 1
-            # self.steps_table.setRowCount(self.steps_table_row)
             self.table_row = self.table_row + 1
-            # self.data_table.setRowCount(self.table_row)
             self.data_name_list.insert(position, QLineEdit(str(position + 1)))
             for i in range(position + 1, len(self.data_name_list)):
                 self.data_name_list[i].setText(str(i + 1))
-            self.data_name_list[position].setAlignment(Qt.AlignCenter)
             self.data_name_list[position].setReadOnly(True)
             self.data_value_list.insert(position, self.create_Qlineedit_object())
-            self.data_value_list[position].setAlignment(Qt.AlignCenter)
             self.data_value_list[position].editingFinished.connect(self.data_value_list_method)
             self.data_value_two_list.insert(position, self.create_Qlineedit_object())
-            self.data_value_two_list[position].setAlignment(Qt.AlignCenter)
             self.data_value_two_list[position].setReadOnly(True)
             self.data_value_two_list[position].editingFinished.connect(self.data_value_two_list_method)
             self.data_value_three_list.insert(position, self.create_Qlineedit_object())
-            self.data_value_three_list[position].setAlignment(Qt.AlignCenter)
             self.data_value_three_list[position].setReadOnly(True)
             self.data_output_value_list.insert(position, self.create_Qlineedit_object())
             self.data_output_value_list[position].setReadOnly(True)
             self.data_transfer_list.insert(position, QLineEdit())
-            self.data_transfer_list[position].setAlignment(Qt.AlignCenter)
-            self.data_output_value_list[position].setAlignment(Qt.AlignCenter)
+            self.set_Alignment(position)
             self.data_output_value_list[position].setContextMenuPolicy(Qt.CustomContextMenu)
             self.data_output_value_list[position].customContextMenuRequested.connect(self.inset_and_delete_action)
 
@@ -629,16 +626,8 @@ class MainInit(QMainWindow):
             self.locator_name_combox_list.insert(position, self.create_Qcombox_object())
             self.locator_name_combox_list[position].addItems(self.options_dict.get(self.sections_list[0]))
 
-            self.data_table.setCellWidget(position, 0, self.data_name_list[position])
-            self.data_table.setCellWidget(position, 1, self.data_value_list[position])
-            self.data_table.setCellWidget(position, 2, self.data_value_two_list[position])
-            self.data_table.setCellWidget(position, 3, self.data_value_three_list[position])
-            self.data_table.setCellWidget(position, 4, self.data_output_value_list[position])
-            self.data_table.setCellWidget(position, 5, self.data_transfer_list[position])
+            self.set_table(position)
 
-            self.steps_table.setCellWidget(position, 0, self.step_combox_list[position])
-            self.steps_table.setCellWidget(position, 1, self.page_combox_list[position])
-            self.steps_table.setCellWidget(position, 2, self.locator_name_combox_list[position])
         if action == delete_action:
             self.steps_table_row = self.steps_table_row - 1
             self.table_row = self.table_row - 1
@@ -761,6 +750,7 @@ class MainInit(QMainWindow):
                 f.write(TestHtmlReport.HTMLEND)
         except:
             QMessageBox.information(self, '提示', "测试报告生成失败", QMessageBox.Yes)
+            print("测试报告生成失败")
 
 
     def all_excute_action_four(self):#用例失败重跑几次 # 执行目录默认是error_and_fail_test_case
@@ -772,9 +762,9 @@ class MainInit(QMainWindow):
                 excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))+"_rerun_{}".format(i+1)
                 self.init_excute_all_data(path, excute_time)
                 self.traverse_all_file(path, 0)
-            self.end_time = time.time()
-            self.write_report_ES()
-            self.send_email()
+                self.end_time = time.time()
+                self.write_report_ES()
+                self.send_email()
 
     def all_excute_action_three(self,excute_all_path): # 定时任务执行方法
         excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
@@ -805,45 +795,23 @@ class MainInit(QMainWindow):
         self.table_row = self.table_row + 1
         self.data_table.setRowCount(self.table_row)
         self.data_name_list.append(QLineEdit(str(self.steps_table_row)))
-        self.data_name_list[-1].setAlignment(Qt.AlignCenter)
         self.data_name_list[-1].setReadOnly(True)
         self.data_value_list.append(self.create_Qlineedit_object())
-        self.data_value_list[-1].setAlignment(Qt.AlignCenter)
         self.data_value_list[-1].editingFinished.connect(self.data_value_list_method)
         self.data_value_two_list.append(self.create_Qlineedit_object())
-        self.data_value_two_list[-1].setAlignment(Qt.AlignCenter)
         self.data_value_two_list[-1].setReadOnly(True)
         self.data_value_two_list[-1].editingFinished.connect(self.data_value_two_list_method)
         self.data_value_three_list.append(self.create_Qlineedit_object())
-        self.data_value_three_list[-1].setAlignment(Qt.AlignCenter)
         self.data_value_three_list[-1].setReadOnly(True)
         self.data_output_value_list.append(self.create_Qlineedit_object())
         self.data_output_value_list[-1].setReadOnly(True)
         self.data_transfer_list.append(QLineEdit())
-        self.data_transfer_list[-1].setAlignment(Qt.AlignCenter)
-        self.data_output_value_list[-1].setAlignment(Qt.AlignCenter)
         self.data_output_value_list[-1].setContextMenuPolicy(Qt.CustomContextMenu)
         self.data_output_value_list[-1].customContextMenuRequested.connect(self.inset_and_delete_action)
+        self.set_Alignment(-1)
+        self.pack_combox(-1)
+        self.set_table(self.steps_table_row - 1)
 
-        self.step_combox_list.append(self.create_Qcombox_object())
-        self.step_combox_list[-1].addItems(list(self.driver_false.back_method_dict().keys()))
-        self.page_combox_list.append(self.create_Qcombox_object())
-        self.page_combox_list[-1].addItems(self.sections_list)
-        self.page_combox_list[-1].currentIndexChanged.connect(self.page_combox_list_method)
-        self.locator_name_combox_list.append(self.create_Qcombox_object())
-        self.locator_name_combox_list[-1].addItems(self.options_dict[self.sections_list[0]])
-
-        self.data_table.setCellWidget(self.steps_table_row - 1, 0, self.data_name_list[-1])
-        self.data_table.setCellWidget(self.steps_table_row - 1, 1, self.data_value_list[-1])
-        self.data_table.setCellWidget(self.steps_table_row - 1, 2, self.data_value_two_list[-1])
-        self.data_table.setCellWidget(self.steps_table_row - 1, 3, self.data_value_three_list[-1])
-        self.data_table.setCellWidget(self.steps_table_row - 1, 4, self.data_output_value_list[-1])
-        self.data_table.setCellWidget(self.steps_table_row - 1, 5, self.data_transfer_list[-1])
-
-        self.steps_table.setCellWidget(self.steps_table_row -1, 0, self.step_combox_list[-1])
-        self.steps_table.setCellWidget(self.steps_table_row -1, 1, self.page_combox_list[-1])
-
-        self.steps_table.setCellWidget(self.steps_table_row -1, 2, self.locator_name_combox_list[-1])
     def data_value_list_method(self):
         index = self.data_value_list.index(self.sender())
         if self.data_value_list[index].text():
@@ -1030,20 +998,14 @@ class MainInit(QMainWindow):
                 for i in range(0,len(test_case.step)):
                     self.data_name_list.append(QLineEdit(str(i+1)))
                     self.data_name_list[i].setReadOnly(True)
-                    self.data_name_list[i].setAlignment(Qt.AlignCenter)
                     self.data_value_list.append(self.create_Qlineedit_object())
-                    self.data_value_list[i].setAlignment(Qt.AlignCenter)
                     self.data_value_two_list.append(self.create_Qlineedit_object())
-                    self.data_value_two_list[i].setAlignment(Qt.AlignCenter)
                     self.data_value_three_list.append(self.create_Qlineedit_object())
-                    self.data_value_three_list[i].setAlignment(Qt.AlignCenter)
                     self.data_output_value_list.append(self.create_Qlineedit_object())
                     self.data_output_value_list[i].setReadOnly(True)
-                    self.data_output_value_list[i].setAlignment(Qt.AlignCenter)
                     self.data_output_value_list[i].setContextMenuPolicy(Qt.CustomContextMenu)
                     self.data_output_value_list[i].customContextMenuRequested.connect(self.inset_and_delete_action)
                     self.data_transfer_list.append(QLineEdit())
-                    self.data_transfer_list[i].setAlignment(Qt.AlignCenter)
                     self.data_transfer_list[i].setText(test_case.data_transfer[i])
                     self.data_value_list[i].setText(test_case.data[i])
                     self.data_value_two_list[i].setText(test_case.data_two[i])
@@ -1054,22 +1016,12 @@ class MainInit(QMainWindow):
                         self.data_value_three_list[i].setReadOnly(True)
                     self.data_value_list[i].editingFinished.connect(self.data_value_list_method)
                     self.data_value_two_list[i].editingFinished.connect(self.data_value_two_list_method)
-                    self.data_table.setCellWidget(i, 0, self.data_name_list[i])
-                    self.data_table.setCellWidget(i, 1, self.data_value_list[i])
-                    self.data_table.setCellWidget(i, 2, self.data_value_two_list[i])
-                    self.data_table.setCellWidget(i, 3, self.data_value_three_list[i])
-                    self.data_table.setCellWidget(i, 4, self.data_output_value_list[i])
-                    self.data_table.setCellWidget(i, 5, self.data_transfer_list[i])
-                    self.step_combox_list.append(self.create_Qcombox_object())
-                    self.step_combox_list[i].addItems(list(self.driver_false.back_method_dict().keys()))
+                    self.pack_combox(i)
+                    self.set_Alignment(i)
                     self.step_combox_list[i].setCurrentText(test_case.step[i])
                     if test_case.step[i] not in list(self.driver_false.back_method_dict().keys()):
                         QMessageBox.information(self, '提示', "第" + str(i + 1) + "步的关键字不存在", QMessageBox.Yes)
-                    self.page_combox_list.append(self.create_Qcombox_object())
-                    self.page_combox_list[i].addItems(self.sections_list)
                     self.page_combox_list[i].setCurrentText(test_case.page[i])
-                    self.page_combox_list[i].currentIndexChanged.connect(self.page_combox_list_method)
-                    self.locator_name_combox_list.append(self.create_Qcombox_object())
                     if self.page_combox_list[i].currentText() !="NONE":
                         self.locator_name_combox_list[i].addItems(self.options_dict.get(self.page_combox_list[i].currentText()))
                         self.locator_name_combox_list[i].setCurrentText(test_case.locator_name[i])
@@ -1077,10 +1029,7 @@ class MainInit(QMainWindow):
                             QMessageBox.information(self, '提示', "第" + str(i + 1) + "步的OPTIONS不存在", QMessageBox.Yes)
                     else:
                         self.locator_name_combox_list[i].addItem(self.options_dict.get(self.page_combox_list[i].currentText()))
-
-                    self.steps_table.setCellWidget(i, 0, self.step_combox_list[i])
-                    self.steps_table.setCellWidget(i, 1, self.page_combox_list[i])
-                    self.steps_table.setCellWidget(i, 2, self.locator_name_combox_list[i])
+                    self.set_table(i)
                 self.list_text_clear()
                 self.assert_method_combox.setCurrentText(test_case.assertmethod)
             except Exception as e:
@@ -1135,71 +1084,6 @@ class MainInit(QMainWindow):
         self.hour_combox.move(int(self.main_width/60+self.table_width*2),int(self.main_height*3/16+320))
         self.day_combox.move(int(self.main_width/60+self.table_width*2),int(self.main_height*3/16+360))
         self.week_combox.move(int(self.main_width/60+self.table_width*2),int(self.main_height*3/16+400))
-    def setup_action_method(self):
-        path = QFileDialog.getOpenFileName(self, "打开正常登录测试用例",os.path.join(os.path.dirname(__file__),"test_case_object"), "*.web")
-        if path[0]:
-            test_case = pickle.load(open(path[0], "rb"))
-            self.url_line_edit.setText(test_case.url)
-            self.list_clear()
-            self.steps_table_row = len(test_case.step)
-            self.table_row = len(test_case.step)
-            self.data_table.setRowCount(self.table_row)
-            self.steps_table.setRowCount(self.steps_table_row)
-
-            for i in range(0, len(test_case.step)):
-                self.data_name_list.append(QLineEdit(str(i + 1)))
-                self.data_name_list[i].setReadOnly(True)
-                self.data_value_list.append(self.create_Qlineedit_object())
-                self.data_value_list[i].setText(test_case.data[i])
-                self.data_value_list[i].editingFinished.connect(self.data_value_list_method)
-                self.data_value_two_list.append(self.create_Qlineedit_object())
-                self.data_value_two_list[i].setText(test_case.data_two[i])
-                self.data_value_two_list[i].editingFinished.connect(self.data_value_two_list_method)
-                if not self.data_value_list[i].text():
-                    self.data_value_two_list[i].setReadOnly(True)
-                self.data_value_three_list.append(self.create_Qlineedit_object())
-                if not self.data_value_two_list[i].text():
-                    self.data_value_three_list[i].setReadOnly(True)
-                self.data_value_three_list[i].setText(test_case.data_three[i])
-                self.data_output_value_list.append(self.create_Qlineedit_object())
-                self.data_output_value_list[i].setAlignment(Qt.AlignCenter)
-                self.data_output_value_list[i].setReadOnly(True)
-                self.data_output_value_list[i].setContextMenuPolicy(Qt.CustomContextMenu)
-                self.data_output_value_list[i].customContextMenuRequested.connect(self.inset_and_delete_action)
-                self.data_transfer_list.append(QLineEdit())
-                self.data_transfer_list[i].setAlignment(Qt.AlignCenter)
-                self.data_transfer_list[i].setText(test_case.data_transfer[i])
-                self.data_value_list[i].setAlignment(Qt.AlignCenter)
-                self.data_value_two_list[i].setAlignment(Qt.AlignCenter)
-                self.data_value_three_list[i].setAlignment(Qt.AlignCenter)
-                self.data_name_list[i].setAlignment(Qt.AlignCenter)
-                self.data_table.setCellWidget(i, 0, self.data_name_list[i])
-                self.data_table.setCellWidget(i, 1, self.data_value_list[i])
-                self.data_table.setCellWidget(i, 2, self.data_value_two_list[i])
-                self.data_table.setCellWidget(i, 3, self.data_value_three_list[i])
-                self.data_table.setCellWidget(i, 4, self.data_output_value_list[i])
-                self.data_table.setCellWidget(i, 5, self.data_transfer_list[i])
-
-                self.step_combox_list.append(self.create_Qcombox_object())
-                self.step_combox_list[i].addItems(list(self.driver_false.back_method_dict().keys()))
-                self.step_combox_list[i].setCurrentText(test_case.step[i])
-                self.page_combox_list.append(self.create_Qcombox_object())
-                self.page_combox_list[i].addItems(self.sections_list)
-                self.page_combox_list[i].setCurrentText(test_case.page[i])
-                self.page_combox_list[i].currentIndexChanged.connect(self.page_combox_list_method)
-                self.locator_name_combox_list.append(self.create_Qcombox_object())
-                if self.page_combox_list[i].currentText() != "NONE":
-                    self.locator_name_combox_list[i].addItems(self.options_dict.get(self.page_combox_list[i].currentText()))
-                    self.locator_name_combox_list[i].setCurrentText(test_case.locator_name[i])
-                else:
-                    self.locator_name_combox_list[i].addItem(self.options_dict.get(self.page_combox_list[i].currentText()))
-
-                self.steps_table.setCellWidget(i, 0, self.step_combox_list[i])
-                self.steps_table.setCellWidget(i, 1, self.page_combox_list[i])
-                self.steps_table.setCellWidget(i, 2, self.locator_name_combox_list[i])
-
-            self.list_text_clear()
-
 
     def save_test_case_action_method(self):
         if not self.title_line_edit.text():
