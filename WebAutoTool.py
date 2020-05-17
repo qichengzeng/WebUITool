@@ -402,23 +402,27 @@ class MainInit(QMainWindow):
         self.timer.timeout.connect(self.timer_excute_method)
         self.timer.timeout.connect(self.fail_and_error_reexcute)#超时执行失败和错误的测试用例
         self.timer.start(1000*60)
-        self.timer_status = 0
+
+
     def fail_and_error_reexcute(self):
         if self.excute_all_status == 0:
-            excute_path = os.path.join(os.path.dirname(__file__),"error_and_fail_test_case")
             self.all_excute_action_four()
+
     def create_Qcombox_object(self):
         combox =  ExtendedComboBox()
         combox.currentTextChanged.connect(self.hover_combox_display_method)
         return combox
     def hover_combox_display_method(self):
         self.sender().setToolTip(self.sender().currentText())
+
     def create_Qlineedit_object(self):
         edit = QLineEdit()
         edit.textChanged.connect(self.hover_display_method)
         return edit
+
     def hover_display_method(self):
         self.sender().setToolTip(self.sender().text())
+
     def import_method(self):
         base_dir = os.path.join(os.path.dirname(__file__), "test_case_object")
         path = QFileDialog.getExistingDirectory(self, "请选择执行目录", base_dir)
@@ -571,8 +575,6 @@ class MainInit(QMainWindow):
         if not self.hour_combox.isEnabled():
             reply = QMessageBox.question(self, "提示", "你确定要取消这个定时任务吗？", QMessageBox.Yes | QMessageBox.No)
             if reply == QMessageBox.Yes:
-                self.timer_status = 0
-                # self.timer.start(1000*60)
                 self.day_combox.setDisabled(False)
                 self.day_radio.setDisabled(False)
                 self.week_radio.setDisabled(False)
@@ -705,11 +707,11 @@ class MainInit(QMainWindow):
                 QMessageBox.information(self, '提示', "邮箱发送失败！！！", QMessageBox.Yes)
                 return None
 
-    def init_excute_all_data(self,path):
+    def init_excute_all_data(self,path,excute_time): #time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
         self.result_success_num = 0
         self.result_fail_num = 0
         self.result_error_num = 0
-        self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
+        self.excute_time = excute_time
         self.start_time = time.time()
         self.all_test_case = 0
         for object_path, dirs, files in os.walk(path):
@@ -717,9 +719,8 @@ class MainInit(QMainWindow):
                 if file.endswith(".web"):
                     self.all_test_case = self.all_test_case + 1
         self.progressBar.setMaximum(self.all_test_case)
-        self.del_file(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
 
-    def traverse_all_file(self,excute_all_path):
+    def traverse_all_file(self,excute_all_path,status):
         index = 0
         for object_path, dirs, files in os.walk(excute_all_path):
             object_path = object_path
@@ -732,7 +733,7 @@ class MainInit(QMainWindow):
                     QApplication.processEvents()
                     self.statu.showMessage("共发现" + str(self.all_test_case) + "个测试数据文件" + "[正在执行测试用例：" + test_case.title + "]")
                     self.progressBar.setValue(index)
-                    self.single_excute_action_method_two(test_case,excute_path,1)
+                    self.single_excute_action_method_two(test_case,excute_path,status)
 
     def write_report_ES(self):#写测试报告的开头和结尾
         all_num = self.result_success_num + self.result_fail_num + self.result_error_num
@@ -762,100 +763,24 @@ class MainInit(QMainWindow):
             QMessageBox.information(self, '提示', "测试报告生成失败", QMessageBox.Yes)
 
 
-    def all_excute_action_four(self):#用例失败重跑几次
+    def all_excute_action_four(self):#用例失败重跑几次 # 执行目录默认是error_and_fail_test_case
         rerun_num = int(self.fail_rerun_combox.currentText())
+        path = os.path.join(os.path.dirname(__file__),"error_and_fail_test_case")
         self.excute_all_status = 1
-        if rerun_num != 0:
+        if rerun_num != 0 and os.listdir(path):
             for i in range(0,rerun_num):
-                self.result_success_num = 0
-                self.result_fail_num = 0
-                self.result_error_num = 0
-                self.excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
-                self.start_time = time.time()
-                for object_path, dirs, files in os.walk(os.path.join(os.path.dirname(__file__),"error_and_fail_test_case")):
-                    object_path = object_path
-                    self.basename = os.path.basename(object_path)
-                    for file in files:
-                        if file.endswith(".web"):
-                            excute_path = os.path.join(object_path, file)
-                            test_case = pickle.load(open(excute_path, "rb"))
-                            self.title_line_edit.setText(test_case.title)
-                            self.url_line_edit.setText(test_case.url)
-                            self.exp_line_edit.setText(test_case.exp)
-                            self.list_clear()
-                            self.steps_table_row = len(test_case.step)
-                            self.table_row = len(test_case.step)
-                            self.data_table.setRowCount(self.table_row)
-                            self.steps_table.setRowCount(self.steps_table_row)
-
-                            for i in range(0, len(test_case.step)):
-                                self.data_name_list.append(QLineEdit(str(i + 1)))
-
-                                self.data_name_list[i].setReadOnly(True)
-
-                                self.data_name_list[i].setAlignment(Qt.AlignCenter)
-
-                                self.data_value_list.append(QLineEdit())
-
-                                self.data_value_list[i].setAlignment(Qt.AlignCenter)
-                                self.data_value_two_list.append(QLineEdit())
-
-                                self.data_value_two_list[i].setAlignment(Qt.AlignCenter)
-                                self.data_value_three_list.append(QLineEdit())
-                                self.data_value_three_list[i].setAlignment(Qt.AlignCenter)
-                                self.data_output_value_list.append(QLineEdit())
-                                self.data_output_value_list[i].setReadOnly(True)
-                                self.data_output_value_list[i].setAlignment(Qt.AlignCenter)
-                                self.data_transfer_list.append(QLineEdit())
-
-                                self.data_transfer_list[i].setAlignment(Qt.AlignCenter)
-                                self.data_transfer_list[i].setText(test_case.data_transfer[i])
-                                self.data_value_list[i].setText(test_case.data[i])
-                                self.data_value_two_list[i].setText(test_case.data_two[i])
-
-                                self.data_value_three_list[i].setText(test_case.data_three[i])
-                                if not self.data_value_list[i].text():
-                                    self.data_value_two_list[i].setReadOnly(True)
-                                if not self.data_value_two_list[i].text():
-                                    self.data_value_three_list[i].setReadOnly(True)
-                                self.data_value_list[i].editingFinished.connect(self.data_value_list_method)
-                                self.data_value_two_list[i].editingFinished.connect(self.data_value_two_list_method)
-                                self.data_table.setCellWidget(i, 0, self.data_name_list[i])
-                                self.data_table.setCellWidget(i, 1, self.data_value_list[i])
-
-                                self.data_table.setCellWidget(i, 2, self.data_value_two_list[i])
-                                self.data_table.setCellWidget(i, 3, self.data_value_three_list[i])
-                                self.data_table.setCellWidget(i, 4, self.data_output_value_list[i])
-                                self.data_table.setCellWidget(i, 5, self.data_transfer_list[i])
-                                self.step_combox_list.append(ExtendedComboBox())
-                                self.step_combox_list[i].addItems(list(self.driver_false.back_method_dict().keys()))
-                                self.step_combox_list[i].setCurrentText(test_case.step[i])
-
-                                self.page_combox_list.append(ExtendedComboBox())
-                                self.page_combox_list[i].addItems(self.sections_list)
-                                self.page_combox_list[i].setCurrentText(test_case.page[i])
-                                self.page_combox_list[i].currentIndexChanged.connect(self.page_combox_list_method)
-                                self.locator_name_combox_list.append(ExtendedComboBox())
-                                if self.page_combox_list[i].currentText() != "NONE":
-                                    self.locator_name_combox_list[i].addItems(
-                                        self.options_dict[self.page_combox_list[i].currentText()])
-                                    self.locator_name_combox_list[i].setCurrentText(test_case.locator_name[i])
-                                else:
-                                    self.locator_name_combox_list[i].addItem(
-                                        self.options_dict[self.page_combox_list[i].currentText()])
-
-                                self.steps_table.setCellWidget(i, 0, self.step_combox_list[i])
-                                self.steps_table.setCellWidget(i, 1, self.page_combox_list[i])
-                                self.steps_table.setCellWidget(i, 2, self.locator_name_combox_list[i])
-
-                            self.single_excute_action_method_three(test_case,excute_path,0)
-                self.end_time = time.time()
-                self.write_report_ES()
-                self.send_email()
+                excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))+"_rerun_{}".format(i+1)
+                self.init_excute_all_data(path, excute_time)
+                self.traverse_all_file(path, 0)
+            self.end_time = time.time()
+            self.write_report_ES()
+            self.send_email()
 
     def all_excute_action_three(self,excute_all_path): # 定时任务执行方法
-        self.init_excute_all_data(excute_all_path)
-        self.traverse_all_file(excute_all_path)
+        excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
+        self.init_excute_all_data(excute_all_path,excute_time)
+        self.del_file(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
+        self.traverse_all_file(excute_all_path,1)
         self.end_time = time.time()
         self.excute_all_status = 0
         self.write_report_ES()
@@ -865,8 +790,10 @@ class MainInit(QMainWindow):
         base_dir = os.path.join(os.path.dirname(__file__),"test_case_object")
         path = QFileDialog.getExistingDirectory(self,"请选择执行目录",base_dir)
         if path:
-            self.init_excute_all_data(path)
-            self.traverse_all_file(path)
+            excute_time = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime(time.time()))
+            self.init_excute_all_data(path,excute_time)
+            self.del_file(os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
+            self.traverse_all_file(path,1)
             self.end_time = time.time()
             self.excute_all_status = 0 # 等于0后会触发执行失败的测试用例
             self.write_report_ES()
@@ -1158,13 +1085,7 @@ class MainInit(QMainWindow):
                 self.assert_method_combox.setCurrentText(test_case.assertmethod)
             except Exception as e:
                 QMessageBox.information(self, '提示', "第"+str(i+1)+"步的SECTION不存在", QMessageBox.Yes)
-                # infoBox = QMessageBox(self)  ##Message Box that doesn't run
-                # infoBox.setIcon(QMessageBox.Information)
-                # infoBox.setText("第"+str(i+1)+"步的SECTION不存在")
-                # infoBox.setWindowTitle("提示")
-                # infoBox.setStandardButtons(QMessageBox.Ok)
-                # infoBox.button(QMessageBox.Ok).animateClick(3 * 1000)
-                # infoBox.exec_()
+
 
 
     def closeEvent(self, QCloseEvent):
@@ -1350,6 +1271,7 @@ class MainInit(QMainWindow):
                             self.data_value_two_list[num].setText(back_data)
                         if int(eval(self.data_transfer_list[i].text())[1]) == 3:
                             self.data_value_three_list[num].setText(back_data)
+
         with open(os.path.join(os.path.dirname(__file__), "SERVICEIP.ini"), "r") as f:
             ip_text = f.read()
         self.driver_true.get(ip_text + self.url_line_edit.text())
@@ -1792,16 +1714,19 @@ class MainInit(QMainWindow):
     def show_test_result(self):
         self.excute_label.setText(
             "成功_" + str(self.result_success_num) + "/" + "失败_" + str(self.result_fail_num) + "/" + "异常_" + str(
-                self.result_error_num) + "/" + str(self.all_test_case))
+                self.result_error_num) + "/" +"一共_"+ str(self.all_test_case))
 
-    def copy_error_file(path):#excute_path
-        if self.result_label.text() == self.result_fail:
+    def copy_error_file(self,path,logger):#excute_path
+        if self.result_label.text() == self.result_fail or self.result_label.text() == self.result_error:
             shutil.copy(path, os.path.join(os.path.dirname(__file__), "error_and_fail_test_case"))
+            logger("复制文件到test_screenshot_png目录成功")
 
-    def remover_success_file(self, path):
+    def remover_success_file(self, path,logger):
         if self.result_label.text() == self.result_success:
             os.remove(path)
-    def calculate_test_result(self,assert_method,exp,act,path):
+            logger("从test_screenshot_png目录删除文件成功")
+
+    def calculate_test_result(self,assert_method,exp,act):
         def add_test_result_log(exp,act):
             self.excute_script.logger.info("用例的期望结果是:" + exp)
             self.excute_script.logger.info("用例的实际结果是:" + act)
@@ -1855,28 +1780,28 @@ class MainInit(QMainWindow):
         start_time = time.time()
         try:
             self.package_excute_all_method(test_case)
-            if self.default_teardown_value == "每个用例执行完关闭浏览器":
-                self.driver_true.quit()
             act_result = self.back_data_list[-1]
-            self.calculate_test_result(test_case.assertmethod,test_case.exp,act_result,excute_path)
+            self.calculate_test_result(test_case.assertmethod,test_case.exp,act_result)
             if status ==1:
-                self.copy_error_file(excute_path)
+                self.copy_error_file(excute_path,self.excute_script.logger.info)
             else:
-                self.remover_success_file(excute_path)
+                self.remover_success_file(excute_path,self.excute_script.logger.info)
             end_time = time.time()
             self.back_data_list.clear()
             test_time = end_time - start_time
+            if self.default_teardown_value == "每个用例执行完关闭浏览器":
+                self.driver_true.quit()
             self.write_test_report(test_case.title,test_time,1)
         except:
-            if status ==1:
+            self.result_label.setText(self.result_error)
+            if status == 1:
                 self.copy_error_file(excute_path)
-            self.copy_error_file(excute_path)
+                self.excute_script.logger.error("复制文件到test_screenshot_png目录成功")
             png_name = os.path.join(os.path.dirname(__file__), "test_screenshot_png",test_case.title + ".png")
             self.true_dict["test_screenshot_png"](png_name)
             self.driver_true.quit()
             end_time = time.time()
             test_time = end_time - start_time
-            self.result_label.setText(self.result_error)
             self.excute_script.logger.error("用例执行异常，请检查脚本\n")
             self.result_error_num += 1
             self.show_test_result()
