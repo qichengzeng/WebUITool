@@ -292,21 +292,12 @@ class MainInit(QMainWindow):
         self.data_table.setColumnCount(6)
         self.data_table.setHorizontalHeaderLabels(["步骤名称","参数一","参数二","参数三","输出数据","数据传递"])
         self.data_name_list.append(QLineEdit("1"))
-        self.data_name_list[0].setReadOnly(True)
-        self.data_value_list.append(self.create_Qlineedit_object())
+        self.pack_linedit()
         self.data_value_list[0].editingFinished.connect(self.data_value_list_method)
-        self.data_value_two_list.append(self.create_Qlineedit_object())
         self.data_value_two_list[0].editingFinished.connect(self.data_value_two_list_method)
-        self.data_value_two_list[0].setReadOnly(True)
-        self.data_value_three_list.append(self.create_Qlineedit_object())
-        self.data_value_three_list[0].setReadOnly(True)
-        self.data_output_value_list.append(self.create_Qlineedit_object())
-        self.data_output_value_list[0].setReadOnly(True)
+        self.set_readonly(0)
         self.data_output_value_list[0].setContextMenuPolicy(Qt.CustomContextMenu)
         self.data_output_value_list[0].customContextMenuRequested.connect(self.inset_and_delete_action)
-        self.data_transfer_list.append(QLineEdit())
-
-
         self.data_table.resize(self.table_width,self.table_row_height)
         self.data_table.verticalHeader().setVisible(False)
         self.data_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
@@ -379,6 +370,19 @@ class MainInit(QMainWindow):
         self.timer.timeout.connect(self.timer_excute_method)
         self.timer.timeout.connect(self.fail_and_error_reexcute)#超时执行失败和错误的测试用例
         self.timer.start(1000*60)
+
+    def set_readonly(self,i):
+        self.data_value_two_list[i].setReadOnly(True)
+        self.data_name_list[i].setReadOnly(True)
+        self.data_value_three_list[i].setReadOnly(True)
+        self.data_output_value_list[i].setReadOnly(True)
+    def pack_linedit(self):
+        self.data_value_list.append(self.create_Qlineedit_object())
+        self.data_value_two_list.append(self.create_Qlineedit_object())
+        self.data_value_three_list.append(self.create_Qlineedit_object())
+        self.data_output_value_list.append(self.create_Qlineedit_object())
+        self.data_transfer_list.append(self.create_Qlineedit_object())
+
 
     def pack_combox(self,i):
         self.page_combox_list.append(self.create_Qcombox_object())
@@ -795,17 +799,10 @@ class MainInit(QMainWindow):
         self.table_row = self.table_row + 1
         self.data_table.setRowCount(self.table_row)
         self.data_name_list.append(QLineEdit(str(self.steps_table_row)))
-        self.data_name_list[-1].setReadOnly(True)
-        self.data_value_list.append(self.create_Qlineedit_object())
+        self.pack_linedit()
+        self.set_readonly(-1)
         self.data_value_list[-1].editingFinished.connect(self.data_value_list_method)
-        self.data_value_two_list.append(self.create_Qlineedit_object())
-        self.data_value_two_list[-1].setReadOnly(True)
         self.data_value_two_list[-1].editingFinished.connect(self.data_value_two_list_method)
-        self.data_value_three_list.append(self.create_Qlineedit_object())
-        self.data_value_three_list[-1].setReadOnly(True)
-        self.data_output_value_list.append(self.create_Qlineedit_object())
-        self.data_output_value_list[-1].setReadOnly(True)
-        self.data_transfer_list.append(QLineEdit())
         self.data_output_value_list[-1].setContextMenuPolicy(Qt.CustomContextMenu)
         self.data_output_value_list[-1].customContextMenuRequested.connect(self.inset_and_delete_action)
         self.set_Alignment(-1)
@@ -916,7 +913,6 @@ class MainInit(QMainWindow):
                 with open(file_path_email, "w+") as f:
                     f.write(ip_line_edit.text()+";"+user_name_edit.text()+";"+password_edit.text()+";"+port_edit.text()+";"+database_edit.text())
                 dialog.close()
-
         submit_btn = QPushButton("确定", dialog)
         submit_btn.clicked.connect(submit_btn_method)
         remove_btn = QPushButton("取消", dialog)
@@ -981,7 +977,6 @@ class MainInit(QMainWindow):
 
 
     def open_test_case_action_method(self):
-
         path = QFileDialog.getOpenFileName(self, "打开测试用例",os.path.join(os.path.dirname(__file__), "test_case_object"), "*.web")
         if path[0]:
             try:
@@ -998,14 +993,11 @@ class MainInit(QMainWindow):
                 for i in range(0,len(test_case.step)):
                     self.data_name_list.append(QLineEdit(str(i+1)))
                     self.data_name_list[i].setReadOnly(True)
-                    self.data_value_list.append(self.create_Qlineedit_object())
-                    self.data_value_two_list.append(self.create_Qlineedit_object())
-                    self.data_value_three_list.append(self.create_Qlineedit_object())
-                    self.data_output_value_list.append(self.create_Qlineedit_object())
+                    self.pack_linedit()
+                    self.set_readonly()
                     self.data_output_value_list[i].setReadOnly(True)
                     self.data_output_value_list[i].setContextMenuPolicy(Qt.CustomContextMenu)
                     self.data_output_value_list[i].customContextMenuRequested.connect(self.inset_and_delete_action)
-                    self.data_transfer_list.append(QLineEdit())
                     self.data_transfer_list[i].setText(test_case.data_transfer[i])
                     self.data_value_list[i].setText(test_case.data[i])
                     self.data_value_two_list[i].setText(test_case.data_two[i])
