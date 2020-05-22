@@ -7,14 +7,20 @@ class Logger:
         self.title = title
     def my_log(self,msg,level):
         self.logger.setLevel(logging.DEBUG)
-        base_path = os.path.dirname(__file__)
-        logger_path = os.path.join(base_path,"test_case_log",self.title)
+        # base_path = os.path.dirname(__file__)
+        # logger_path = os.path.join(base_path,"test_case_log",self.title)
         #添加文件日志和控制台日志
-        if os.path.exists(os.path.join(base_path,"test_case_log")):
-           self.filehandler=logging.FileHandler(filename=logger_path,mode="a+",encoding="utf-8")
+        # if os.path.exists(os.path.join(base_path,"test_case_log")):
+        #    self.filehandler=logging.FileHandler(filename=logger_path,mode="a+",encoding="utf-8")
+        # else:
+        #     os.mkdir(os.path.join(base_path,"test_case_log"))
+        #     self.filehandler = logging.FileHandler(filename=logger_path, mode="a+", encoding="utf-8")
+        if os.path.exists("./test_case_log"):
+           self.filehandler=logging.FileHandler(filename="./test_case_log/{}".format(self.title),mode="a+",encoding="utf-8")
         else:
-            os.mkdir(os.path.join(base_path,"test_case_log"))
-            self.filehandler = logging.FileHandler(filename=logger_path, mode="a+", encoding="utf-8")
+            os.mkdir("./test_case_log")
+            self.filehandler = logging.FileHandler(filename="./test_case_log/{}".format(self.title), mode="a+", encoding="utf-8")
+
         self.consolehandler = logging.StreamHandler()
         #为文件日志和控制台日志添加日志级别
         self.filehandler.setLevel("DEBUG")

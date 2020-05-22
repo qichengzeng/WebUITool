@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['WebAutoTool.py', 'base_method.py', 'logger.py'],
+a = Analysis(['WebAutoTool.py', 'base_method.py', 'logger.py', 'testHtmlReport.py'],
              pathex=['D:\\pythonProject\\WebAutoTool'],
              binaries=[],
              datas=[],

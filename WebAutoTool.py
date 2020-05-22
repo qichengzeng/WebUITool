@@ -19,7 +19,6 @@ from openpyxl import Workbook
 from openpyxl import load_workbook
 import shutil
 from testHtmlReport import TestHtmlReport,global_null_list,minute_list,hour_list,day_list
-
 def send_test_report(email_service,username,password,receves,filename):
     sender = username
     receivers = receves  # 接收邮件，可设置为你的QQ邮箱或者其他邮箱
@@ -977,10 +976,10 @@ class MainInit(QMainWindow):
 
 
     def open_test_case_action_method(self):
-        path = QFileDialog.getOpenFileName(self, "打开测试用例",os.path.join(os.path.dirname(__file__), "test_case_object"), "*.web")
+        path = QFileDialog.getOpenFileName(self, "打开测试用例",os.path.join(os.path.dirname(__file__),"test_case_object"),"*.web")
         if path[0]:
             try:
-                test_case = pickle.load(open(path[0],"rb"))
+                test_case = pickle.load(open(path[0], "rb"))
                 self.title_line_edit.setText(test_case.title)
                 self.url_line_edit.setText(test_case.url)
                 self.exp_line_edit.setText(test_case.exp)
@@ -989,13 +988,12 @@ class MainInit(QMainWindow):
                 self.table_row = len(test_case.step)
                 self.data_table.setRowCount(self.table_row)
                 self.steps_table.setRowCount(self.steps_table_row)
-
                 for i in range(0,len(test_case.step)):
-                    self.data_name_list.append(QLineEdit(str(i+1)))
-                    self.data_name_list[i].setReadOnly(True)
+                    self.data_name_list.append(QLineEdit(str(i + 1)))
                     self.pack_linedit()
-                    self.set_readonly()
+                    self.set_Alignment(i)
                     self.data_output_value_list[i].setReadOnly(True)
+                    self.data_name_list[i].setReadOnly(True)
                     self.data_output_value_list[i].setContextMenuPolicy(Qt.CustomContextMenu)
                     self.data_output_value_list[i].customContextMenuRequested.connect(self.inset_and_delete_action)
                     self.data_transfer_list[i].setText(test_case.data_transfer[i])
@@ -1008,24 +1006,32 @@ class MainInit(QMainWindow):
                         self.data_value_three_list[i].setReadOnly(True)
                     self.data_value_list[i].editingFinished.connect(self.data_value_list_method)
                     self.data_value_two_list[i].editingFinished.connect(self.data_value_two_list_method)
-                    self.pack_combox(i)
-                    self.set_Alignment(i)
+                    self.step_combox_list.append(self.create_Qcombox_object())
+                    self.step_combox_list[i].addItems(list(self.driver_false.back_method_dict().keys()))
                     self.step_combox_list[i].setCurrentText(test_case.step[i])
                     if test_case.step[i] not in list(self.driver_false.back_method_dict().keys()):
                         QMessageBox.information(self, '提示', "第" + str(i + 1) + "步的关键字不存在", QMessageBox.Yes)
+                    self.page_combox_list.append(self.create_Qcombox_object())
+                    self.page_combox_list[i].addItems(self.sections_list)
                     self.page_combox_list[i].setCurrentText(test_case.page[i])
-                    if self.page_combox_list[i].currentText() !="NONE":
-                        self.locator_name_combox_list[i].addItems(self.options_dict.get(self.page_combox_list[i].currentText()))
+                    self.page_combox_list[i].currentIndexChanged.connect(self.page_combox_list_method)
+                    self.locator_name_combox_list.append(self.create_Qcombox_object())
+                    if self.page_combox_list[i].currentText() != "NONE":
+                        self.locator_name_combox_list[i].addItems(
+                            self.options_dict.get(self.page_combox_list[i].currentText()))
                         self.locator_name_combox_list[i].setCurrentText(test_case.locator_name[i])
-                        if test_case.locator_name[i] not in list(self.options_dict.get(self.page_combox_list[i].currentText())):
+                        if test_case.locator_name[i] not in list(
+                                self.options_dict.get(self.page_combox_list[i].currentText())):
                             QMessageBox.information(self, '提示', "第" + str(i + 1) + "步的OPTIONS不存在", QMessageBox.Yes)
                     else:
-                        self.locator_name_combox_list[i].addItem(self.options_dict.get(self.page_combox_list[i].currentText()))
+                        self.locator_name_combox_list[i].addItem(
+                            self.options_dict.get(self.page_combox_list[i].currentText()))
+
                     self.set_table(i)
                 self.list_text_clear()
                 self.assert_method_combox.setCurrentText(test_case.assertmethod)
             except Exception as e:
-                QMessageBox.information(self, '提示', "第"+str(i+1)+"步的SECTION不存在", QMessageBox.Yes)
+                QMessageBox.information(self, '提示', "第" + str(i + 1) + "步的SECTION不存在", QMessageBox.Yes)
 
 
 
@@ -1656,7 +1662,10 @@ class MainInit(QMainWindow):
         start_time = time.time()
         try:
             self.package_excute_all_method(test_case)
-            act_result = self.back_data_list[-1]
+            if self.back_data_list[-1] == None:
+                act_result = "None"
+            else:
+                act_result = self.back_data_list[-1]
             self.calculate_test_result(test_case.assertmethod,test_case.exp,act_result)
             if status ==1:
                 self.copy_error_file(excute_path,self.excute_script.logger.info)

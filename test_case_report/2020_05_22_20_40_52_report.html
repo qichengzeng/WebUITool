@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试报告</title>
+    <script language="javascript">
+
+function show(obj){
+    var ele_log = document.getElementsByName('log');
+    var ele_detail = document.getElementsByName("detail");
+    var i = ele_log.length;
+    while (i--) {
+        if (ele_detail[i] ==obj) {
+            break
+        }
+    }
+    if (ele_log[i].hasAttribute("hidden")){
+          ele_log[i].removeAttribute("hidden");
+          ele_detail[i].innerHTML="收起";
+    }else {
+          ele_detail[i].innerHTML="详细";
+          ele_log[i].setAttribute("hidden","true");
+    }
+}
+function show_pass() {
+    if (document.getElementById("pass").checked) {
+        var eles = document.getElementsByName("rpass")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+           eles[index].removeAttribute("hidden")
+        }
+    }
+    else {
+        var eles = document.getElementsByName("rpass")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+            eles[index].setAttribute("hidden", "true")
+        }
+    }
+}
+function show_unpass() {
+    if (document.getElementById("unpass").checked) {
+        var eles = document.getElementsByName("runpass")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+           eles[index].removeAttribute("hidden")
+        }
+    }
+    else {
+        var eles = document.getElementsByName("runpass")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+            eles[index].setAttribute("hidden", "true")
+        }
+    }
+}
+function show_error() {
+    if (document.getElementById("error").checked) {
+        var eles = document.getElementsByName("rerror")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+           eles[index].removeAttribute("hidden")
+        }
+    }
+    else {
+        var eles = document.getElementsByName("rerror")
+        var len = eles.length
+        var index = 0
+        for (index; index < len; index++) {
+            eles[index].setAttribute("hidden", "true")
+        }
+    }
+}
+    
+</script>
+</head>
+<body>
+ <h1>自动化测试报告</h1>
+ <p class ="attribute"><strong>浏览器环境：CHROME</strong></p>
+ <p class ="attribute"><strong>测试地址：http://www.acedental.com.cn/</strong></p>
+ <p class ="attribute"><strong>用例开始执行时间：2020_05_22_20_40_52</strong></p>
+ <p class ="attribute"><strong>总计耗时：48.26586127281189</strong></p>
+ <p class ="attribute"><strong>测试结果：共2,通过1,失败1,错误0,通过率=50.00%</strong></p>
+ <p class ="attribute"><strong>用例执行情况：</strong></p>
+ <label style="background-color: green;"><input id="pass" checked onclick="show_pass()" type="checkbox" value="" />用例通过 : 1&nbsp&nbsp&nbsp </label>
+ <label style="background-color: yellow;"><input id="unpass" checked onclick="show_unpass()" type="checkbox" value="" />用例不通过 : 1&nbsp&nbsp </label>
+ <label style="background-color: red;"><input id="error" checked onclick="show_error()" type="checkbox" value="" />用例异常 : 0&nbsp&nbsp&nbsp </label>
+ <table id="result_table" style="text-align: center" width="100%" border="1" cellpadding="2" cellspacing="1">
+     <colgroup>
+         <col align="left">
+         <col align="right">
+         <col align="right">
+         <col align="right">
+         <col align="right">
+     </colgroup>
+     <tr id ="header_row" style="font-weight: bold;font-size: 16px;">
+         <td>所属模块</td>
+         <td>用例标题</td>
+         <td>日志记录</td>
+         <td>耗费时间</td>
+         <td>结果</td>
+     </tr>
+    
+<tr name="runpass">
+         <td>test</td>
+         <td>a_正常登录</td>
+         <td><a href="javascript:void(0)" onclick="show(this)" style="text-align: center" name="detail">详细</a>
+             <pre name="log" style="text-align: left" hidden="true">
+2020-05-21 23:21:32,009____test_case___INFO___a_正常登录_用例开始执行
+2020-05-21 23:21:32,020____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-21 23:21:32,021____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-21 23:21:32,207____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-21 23:21:33,271____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-21 23:21:33,273____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-21 23:21:33,274____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-21 23:21:33,309____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-21 23:21:34,226____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-21 23:21:34,228____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-21 23:21:34,229____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-21 23:21:35,442____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-21 23:21:36,994____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-21 23:21:36,995____test_case___INFO___正在准备等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见
+2020-05-21 23:22:08,204____test_case___ERROR___等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见失败
+2020-05-21 23:22:08,205____test_case___INFO___正在准备获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素的文本值
+2020-05-21 23:22:08,207____test_case___INFO___正在准备查找('xpath', "//label[text()='诊所：']//following-sibling::span")元素
+2020-05-21 23:22:08,278____test_case___ERROR___{}元素查找失败
+2020-05-21 23:22:08,279____test_case___ERROR___获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素文本值失败
+2020-05-21 23:22:08,280____test_case___INFO___用例的执行情况是:用例执行失败
+
+2020-05-22 00:02:16,333____test_case___INFO___a_正常登录_用例开始执行
+2020-05-22 00:02:16,337____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-22 00:02:16,338____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-22 00:02:16,350____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-22 00:02:16,443____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-22 00:02:16,444____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-22 00:02:16,444____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-22 00:02:16,454____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-22 00:02:16,535____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-22 00:02:16,535____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-22 00:02:16,536____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-22 00:02:16,547____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-22 00:02:16,586____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-22 00:02:16,588____test_case___INFO___正在准备等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见
+2020-05-22 00:02:47,558____test_case___ERROR___等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见失败
+2020-05-22 00:02:47,559____test_case___INFO___正在准备获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素的文本值
+2020-05-22 00:02:47,560____test_case___INFO___正在准备查找('xpath', "//label[text()='诊所：']//following-sibling::span")元素
+2020-05-22 00:02:47,571____test_case___ERROR___{}元素查找失败
+2020-05-22 00:02:47,571____test_case___ERROR___获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素文本值失败
+2020-05-22 00:02:47,572____test_case___INFO___用例的执行情况是:用例执行失败
+
+2020-05-22 20:18:11,341____test_case___INFO___a_正常登录_用例开始执行
+2020-05-22 20:18:14,064____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-22 20:18:14,066____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-22 20:18:14,078____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-22 20:18:14,163____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-22 20:18:14,164____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-22 20:18:14,164____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-22 20:18:14,174____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-22 20:18:14,238____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-22 20:18:14,239____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-22 20:18:14,240____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-22 20:18:14,248____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-22 20:18:14,291____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-22 20:18:14,292____test_case___INFO___正在准备等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见
+2020-05-22 20:18:44,314____test_case___ERROR___等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见失败
+2020-05-22 20:18:44,314____test_case___INFO___正在准备获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素的文本值
+2020-05-22 20:18:44,315____test_case___INFO___正在准备查找('xpath', "//label[text()='诊所：']//following-sibling::span")元素
+2020-05-22 20:18:44,327____test_case___ERROR___{}元素查找失败
+2020-05-22 20:18:44,327____test_case___ERROR___获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素文本值失败
+2020-05-22 20:18:44,328____test_case___INFO___用例的期望结果是:牙典
+2020-05-22 20:23:58,874____test_case___INFO___a_正常登录_用例开始执行
+2020-05-22 20:24:01,588____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-22 20:24:01,589____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-22 20:24:01,599____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-22 20:24:01,674____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-22 20:24:01,674____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-22 20:24:01,675____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-22 20:24:01,686____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-22 20:24:01,767____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-22 20:24:01,768____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-22 20:24:01,769____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-22 20:24:01,781____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-22 20:24:01,837____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-22 20:24:01,838____test_case___INFO___正在准备等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见
+2020-05-22 20:24:32,123____test_case___ERROR___等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见失败
+2020-05-22 20:24:32,124____test_case___INFO___正在准备获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素的文本值
+2020-05-22 20:24:32,125____test_case___INFO___正在准备查找('xpath', "//label[text()='诊所：']//following-sibling::span")元素
+2020-05-22 20:24:32,136____test_case___ERROR___{}元素查找失败
+2020-05-22 20:24:32,136____test_case___ERROR___获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素文本值失败
+2020-05-22 20:24:32,137____test_case___INFO___用例的期望结果是:牙典
+2020-05-22 20:33:11,553____test_case___INFO___a_正常登录_用例开始执行
+2020-05-22 20:33:14,179____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-22 20:33:14,180____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-22 20:33:14,190____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-22 20:33:14,264____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-22 20:33:14,264____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-22 20:33:14,265____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-22 20:33:14,275____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-22 20:33:14,342____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-22 20:33:14,343____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-22 20:33:14,343____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-22 20:33:14,353____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-22 20:33:14,402____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-22 20:33:14,403____test_case___INFO___正在准备等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见
+2020-05-22 20:33:44,614____test_case___ERROR___等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见失败
+2020-05-22 20:33:44,615____test_case___INFO___正在准备获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素的文本值
+2020-05-22 20:33:44,616____test_case___INFO___正在准备查找('xpath', "//label[text()='诊所：']//following-sibling::span")元素
+2020-05-22 20:33:44,626____test_case___ERROR___{}元素查找失败
+2020-05-22 20:33:44,627____test_case___ERROR___获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素文本值失败
+2020-05-22 20:33:44,627____test_case___INFO___用例的期望结果是:牙典
+2020-05-22 20:40:55,670____test_case___INFO___a_正常登录_用例开始执行
+2020-05-22 20:40:58,319____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-22 20:40:58,320____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-22 20:40:58,333____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-22 20:40:58,431____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-22 20:40:58,432____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-22 20:40:58,433____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-22 20:40:58,442____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-22 20:40:58,516____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入_Zqc397185@_内容成功
+2020-05-22 20:40:58,516____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-22 20:40:58,517____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-22 20:40:58,528____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-22 20:40:58,565____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-22 20:40:58,566____test_case___INFO___正在准备等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见
+2020-05-22 20:41:29,558____test_case___ERROR___等待('xpath', "//label[text()='账号：']//following-sibling::span")元素可见失败
+2020-05-22 20:41:29,559____test_case___INFO___正在准备获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素的文本值
+2020-05-22 20:41:29,559____test_case___INFO___正在准备查找('xpath', "//label[text()='诊所：']//following-sibling::span")元素
+2020-05-22 20:41:29,570____test_case___ERROR___{}元素查找失败
+2020-05-22 20:41:29,570____test_case___ERROR___获取('xpath', "//label[text()='诊所：']//following-sibling::span")元素文本值失败
+2020-05-22 20:41:29,571____test_case___INFO___用例的期望结果是:牙典
+2020-05-22 20:41:29,571____test_case___INFO___用例的实际结果是:None
+2020-05-22 20:41:29,572____test_case___INFO___用例的执行情况是:用例执行失败
+
+2020-05-22 20:41:29,575____test_case___INFO___复制文件到test_screenshot_png目录成功
+
+         </pre>
+         </td>
+         <td>33.9052848815918</td>
+         <td style="background-color: yellow">用例执行失败</td>
+     </tr>
+    
+     <tr name="rpass">
+         <td>test</td>
+         <td>c_登录密码为空</td>
+         <td><a href="javascript:void(0)" onclick="show(this)" style="text-align: center" name="detail">详细</a>
+             <pre name="log" style="text-align: left" hidden="true">
+2020-05-22 20:41:35,275____test_case___INFO___c_登录密码为空_用例开始执行
+2020-05-22 20:41:37,871____test_case___INFO___正在准备在('xpath', "//input[@name='user_name']")元素输入框输入内容
+2020-05-22 20:41:37,871____test_case___INFO___正在准备查找('xpath', "//input[@name='user_name']")元素
+2020-05-22 20:41:37,882____test_case___INFO___('xpath', "//input[@name='user_name']")元素查找成功
+2020-05-22 20:41:37,970____test_case___INFO___('xpath', "//input[@name='user_name']")元素输入框输入_zengqicheng_内容成功
+2020-05-22 20:41:37,970____test_case___INFO___正在准备在('xpath', "//input[@name='password']")元素输入框输入内容
+2020-05-22 20:41:37,971____test_case___INFO___正在准备查找('xpath', "//input[@name='password']")元素
+2020-05-22 20:41:37,984____test_case___INFO___('xpath', "//input[@name='password']")元素查找成功
+2020-05-22 20:41:38,019____test_case___INFO___('xpath', "//input[@name='password']")元素输入框输入__内容成功
+2020-05-22 20:41:38,020____test_case___INFO___正在准备点击('xpath', "//a[text()='登录']")元素
+2020-05-22 20:41:38,023____test_case___INFO___正在准备查找('xpath', "//a[text()='登录']")元素
+2020-05-22 20:41:38,044____test_case___INFO___('xpath', "//a[text()='登录']")元素查找成功
+2020-05-22 20:41:38,149____test_case___INFO___('xpath', "//a[text()='登录']")元素点击成功
+2020-05-22 20:41:38,150____test_case___INFO___正在准备等待('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见
+2020-05-22 20:41:38,173____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素可见成功
+2020-05-22 20:41:38,175____test_case___INFO___正在准备获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素的文本值
+2020-05-22 20:41:38,177____test_case___INFO___正在准备查找('xpath', "//strong[text()='警告!']//following-sibling::span")元素
+2020-05-22 20:41:38,186____test_case___INFO___('xpath', "//strong[text()='警告!']//following-sibling::span")元素查找成功
+2020-05-22 20:41:38,198____test_case___INFO___获取('xpath', "//strong[text()='警告!']//following-sibling::span")元素文本值成功_密码不能为空！
+2020-05-22 20:41:38,198____test_case___INFO___用例的期望结果是:密码不能为空！
+2020-05-22 20:41:38,199____test_case___INFO___用例的实际结果是:密码不能为空！
+2020-05-22 20:41:38,199____test_case___INFO___用例的执行情况是:用例执行通过
+
+
+         </pre>
+         </td>
+         <td>2.9251739978790283</td>
+         <td style="background-color: green">用例执行通过</td>
+     </tr>
+     
+ </table>
+</body>
+</html>
+    
